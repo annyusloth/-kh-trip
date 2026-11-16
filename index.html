@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F3F1F6">
+<title>高雄 ARIRANG 之旅</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style id="css">
+/* Layout: one 600px column. Dark concert-ticket header, then a sticky section bar, then day cards with a date rail. */
+:root{
+ --bg:#F3F1F6;--card:#FFFFFF;--ink:#1D1924;--ink2:#3B3546;--muted:#756E80;--line:#E6E2EC;
+ --accent:#5A3E9E;--accent-ink:#3F2A78;--wash:#EFEAF9;--show:#C8364A;--ok:#2E8577;--sea:#2D6FA8;
+ --display:"Noto Serif TC","Songti TC",serif;--body:"Noto Sans TC",-apple-system,"PingFang TC",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+ color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+button,a,input{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.wrap{max-width:600px;margin:0 auto;padding:16px 16px 96px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ticket */
+.ticket{background:var(--ink);color:#F4F0FA;border-radius:22px;position:relative;overflow:hidden;box-shadow:0 18px 40px -22px rgba(40,20,80,.55)}
+.ticket .glow{position:absolute;inset:0;background:radial-gradient(120% 80% at 100% 0%,rgba(122,92,206,.45),transparent 55%);pointer-events:none}
+.tmain{position:relative;padding:20px 22px 18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:#B9A6E8;text-transform:uppercase}
+.ticket h1{font-family:var(--display);font-weight:900;font-size:34px;line-height:1.15;margin:8px 0 6px;letter-spacing:.04em;text-wrap:balance}
+.tmeta{font-size:13px;color:#CBC3D8}
+.cd{text-align:right}
+.cd .n{font-family:var(--display);font-weight:900;font-size:52px;line-height:.9;color:#fff}
+.cd .l{font-size:12px;color:#CBC3D8;margin-top:6px}
+.stub{position:relative;border-top:2px dashed rgba(255,255,255,.16);padding:14px 16px 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stub::before,.stub::after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.stub::before{left:-11px}.stub::after{right:-11px}
+.show{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;color:inherit;text-align:left;cursor:pointer}
+.show .d{font-family:var(--mono);font-weight:600;font-size:15px}
+.show .s{font-size:11px;color:#B3AAC2}
+.show.today{background:var(--show);border-color:var(--show)}
+.show.today .s{color:#fff}
+.show.past{opacity:.45}
+.show.past .d{text-decoration:line-through}
+
+/* next up */
+.next{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center}
+.next .tag{grid-row:span 2;align-self:stretch;display:flex;flex-direction:column;justify-content:center;align-items:center;background:var(--wash);border-radius:12px;padding:6px 12px;min-width:68px}
+.next .tag b{font-family:var(--mono);font-size:18px;color:var(--accent-ink)}
+.next .tag small{font-size:10px;letter-spacing:.14em;color:var(--accent);font-family:var(--mono)}
+.next .k{font-size:12px;color:var(--muted)}
+.next .x{font-weight:700;font-size:15px;line-height:1.4}
+.next .acts{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+/* tabs */
+.tabs{position:sticky;top:0;z-index:30;margin:14px -16px 0;padding:10px 16px;background:rgba(243,241,246,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.tabs nav{display:grid;grid-template-columns:repeat(5,1fr);background:#E7E3EE;border-radius:12px;padding:3px}
+.tabs a{text-align:center;text-decoration:none;color:var(--ink2);font-size:13px;font-weight:500;padding:7px 0;border-radius:9px;transition:background .2s,color .2s}
+.tabs a.on{background:var(--card);color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(30,20,50,.12)}
+
+section{margin-top:34px;scroll-margin-top:70px}
+.sh{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px}
+.sh .i{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.sh h2{margin:0;font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:.03em}
+.sh .en{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.big{font-size:17px;font-weight:700}
+.sub{font-size:14px;color:var(--muted)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{flex:1;min-width:120px;text-align:center;text-decoration:none;font-size:14px;font-weight:700;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.note{margin-top:12px;background:var(--wash);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--accent-ink);line-height:1.65}
+.note b{font-family:var(--mono);font-size:11px;letter-spacing:.14em;margin-right:6px;color:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--ink2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--card);cursor:pointer;text-decoration:none;line-height:1.4}
+.chip.solid{background:var(--show);border-color:var(--show);color:#fff}
+.chip.ink{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.static{cursor:default}
+
+/* days */
+.days-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.day{display:grid;grid-template-columns:62px 1fr;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.day.today{border:2px solid var(--accent)}
+.rail{background:var(--wash);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:2px;color:var(--accent-ink)}
+.rail .mo{font-family:var(--mono);font-size:10px;letter-spacing:.16em}
+.rail .dn{font-family:var(--display);font-weight:900;font-size:30px;line-height:1}
+.rail .wk{font-size:12px}
+.rail .flag{margin-top:8px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;background:var(--show);color:#fff;border-radius:4px;padding:1px 5px}
+.day.showday .rail{background:var(--ink);color:#F4F0FA}
+.day.today .rail .flag.t{background:var(--accent)}
+.evs{list-style:none;margin:0;padding:6px 14px}
+.evs li{display:grid;grid-template-columns:54px 1fr auto;gap:8px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.evs li:first-child{border-top:0}
+.evs .t{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);padding-top:2px}
+.evs .x{font-size:15px;line-height:1.5;min-width:0}
+.evs .x.v{font-weight:700}
+.evs .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mine{font-size:10px;font-weight:700;color:var(--accent-ink);background:var(--wash);border-radius:5px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.del{border:0;background:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px 4px;line-height:1}
+.empty{color:var(--muted);font-size:14px;padding:12px 0}
+
+/* map */
+.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;border-radius:999px;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink2);cursor:pointer}
+.filters button i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.filters button.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
+.mapbox{position:relative;background:#F2F0EC;border:1px solid var(--line);border-radius:20px;overflow:hidden;height:min(66vh,560px)}
+.mapbox svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;font-family:var(--body)}
+.mapctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(30,20,50,.08)}
+.mapctl button{width:38px;height:36px;border:0;border-top:1px solid var(--line);background:none;font-size:17px;font-weight:600;color:var(--ink);cursor:pointer}
+.mapctl button:first-child{border-top:0}
+.maplegend{position:absolute;left:10px;bottom:10px;font-size:11px;color:var(--muted);background:rgba(255,255,255,.88);border-radius:8px;padding:3px 9px}
+.pin{cursor:pointer}
+
+/* list */
+.grp{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink2);margin:20px 2px 8px}
+.grp i{width:8px;height:8px;border-radius:50%}
+.grp span{font-family:var(--mono);font-weight:500;color:var(--muted);font-size:11px;margin-left:auto}
+.plist{padding:0 14px}
+.prow{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer;align-items:flex-start}
+.prow:first-child{border-top:0}
+.ic{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:700}
+.nm{font-weight:700;font-size:15px;line-height:1.45}
+.ds{font-size:13px;color:var(--muted);line-height:1.55;margin-top:2px}
+.w{display:inline-block;font-size:11px;font-weight:600;background:#F1EFF4;color:var(--ink2);border-radius:6px;padding:1px 7px;margin-top:5px}
+.added{font-size:10px;color:#fff;background:var(--accent);border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(20,14,30,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;max-width:600px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;padding:16px 18px 28px;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-height:86vh;overflow-y:auto;box-shadow:0 -12px 40px rgba(20,10,40,.18)}
+.sheet.show{transform:none}
+.grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:-4px auto 14px}
+.cat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px 2px 8px;background:#F1EFF4;color:var(--ink2)}
+.cat i{width:8px;height:8px;border-radius:50%}
+.sheet h3{margin:8px 0 6px;font-family:var(--display);font-weight:900;font-size:22px;line-height:1.3;text-wrap:balance}
+.sheet .sub{white-space:pre-line;line-height:1.7}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);margin:16px 0 8px;text-transform:uppercase}
+.dpick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.dpick button{font-size:14px;font-weight:700;padding:8px 0;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;line-height:1.3}
+.dpick button small{font-weight:400;color:var(--muted)}
+.dpick button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.dpick button.on small{color:#E3DAF7}
+.sheet input[type=time]{font-size:16px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;width:100%;color:var(--ink)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin-top:12px;background:#F7F5FA;border-radius:14px;padding:12px 14px}
+.kv dt{font-size:12px;color:var(--muted);padding-top:3px}
+.kv dd{margin:0;font-family:var(--mono);font-weight:600;font-size:16px}
+
+/* timeline */
+.vt{list-style:none;margin:10px 0 0;padding:0;position:relative}
+.vt::before{content:"";position:absolute;left:75px;top:10px;bottom:10px;width:1px;background:var(--line)}
+.vt li{display:grid;grid-template-columns:66px 1fr;gap:20px;padding:8px 0;position:relative}
+.vt .vtm{text-align:right;font-family:var(--mono);font-weight:600;font-size:12px;line-height:1.5;color:var(--ink2);padding-top:2px}
+.vt .vd{position:absolute;left:71px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--card);border:2px solid var(--accent)}
+.vt .vh{font-weight:700;font-size:15px;line-height:1.45}
+.vt .vs{font-size:13px;color:var(--muted);line-height:1.6;margin-top:2px}
+.vt li.hot .vd{background:var(--show);border-color:var(--show)}
+.vt li.hot .vtm{color:var(--show)}
+
+.ckrow{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.ckrow input,.ckbox{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:1px 0 0;border:1.5px solid #B9B2C4;border-radius:7px;display:grid;place-items:center;background:#fff;cursor:pointer}
+.ckrow input:checked,.ckbox:checked{background:var(--ok);border-color:var(--ok)}
+.ckrow input:checked::after,.ckbox:checked::after{content:"✓";color:#fff;font-size:13px;font-weight:900}
+.ckrow:has(input:checked) b{color:var(--muted);text-decoration:line-through}
+.prow:has(.ckbox:checked) .nm{color:var(--muted);text-decoration:line-through}
+.prog{height:6px;border-radius:6px;background:#EEEBF2;overflow:hidden;margin-top:10px}
+.prog i{display:block;height:100%;background:var(--ok);border-radius:6px;transition:width .3s}
+
+.people{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.people .card{display:flex;flex-direction:column}
+.av{width:36px;height:36px;border-radius:50%;background:var(--wash);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:16px;margin-bottom:8px}
+.people .btns{margin-top:auto;padding-top:10px}
+.people .btn{min-width:0}
+.links .btn{display:flex;justify-content:space-between;text-align:left}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:9px 18px;border-radius:999px;font-size:14px;transition:.25s;z-index:80;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:40px;font-family:var(--mono);letter-spacing:.12em}
+@media (max-width:380px){.ticket h1{font-size:28px}.cd .n{font-size:42px}.people{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="application/json" id="state">{"rev":0,"added":[],"checked":{}}</script>
+<script id="app">
+(function(){
+const HEAD='<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="theme-color" content="#F3F1F6">\n<title>高雄 ARIRANG 之旅</title>\n<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">\n';
+const CATS={
+ base:{n:'住宿・場館',c:'#1D1924',g:'住'},
+ cheer:{n:'應援打卡',c:'#6A47B8',g:'紫'},
+ cafe:{n:'咖啡・飲品',c:'#B5762A',g:'咖'},
+ expo:{n:'看展',c:'#2E8577',g:'展'},
+ sea:{n:'海邊',c:'#2D6FA8',g:'海'},
+ event:{n:'活動・優惠',c:'#C2457A',g:'活'},
+ eat:{n:'美食推薦',c:'#D46A24',g:'食'},
+ fan:{n:'應援企劃',c:'#A3208F',g:'援'}
+};
+const P=[
+ {id:'hotel',c:'base',n:'昭來商旅（住宿）',d:'高雄市苓雅區仁政里青年一路311號',w:'3 晚',lat:22.6208,lng:120.3105,q:'昭來商旅 高雄市苓雅區青年一路311號'},
+ {id:'stadium',c:'base',n:'世運主場館（演唱會）',d:'高雄國家體育場・左營區世運大道100號。捷運紅線 R16 左營往北（岡山方向）1 站到 R17 世運，步行約 10 分鐘',w:'19:00 開演',lat:22.7046,lng:120.2966,q:'高雄國家體育場 世運主場館'},
+ {id:'popup',c:'base',n:'ARIRANG 快閃店',d:'義享天地 1F・鼓山區大順一路115號。義享天地也有應援看板',w:'11/20 18:10',lat:22.6562,lng:120.2985,q:'義享天地 高雄市鼓山區大順一路115號'},
+ {id:'hsr',c:'base',n:'高鐵左營站',d:'去程抵達站，可轉捷運紅線',w:'交通',lat:22.6875,lng:120.3078,q:'高鐵左營站'},
+ {id:'85',c:'cheer',n:'85大樓「KH LOVES ARMY!」',d:'整棟紫光，外牆投出白色大字',w:'晚上',lat:22.6116,lng:120.3005,q:'高雄85大樓'},
+ {id:'kpmc',c:'cheer',n:'高雄流行音樂中心',d:'亮防彈紫；常設 POP!POP!POP! 流行音樂互動展',w:'晚上',lat:22.6213,lng:120.2850,q:'高雄流行音樂中心'},
+ {id:'light',c:'cheer',n:'輕軌光榮碼頭站 BTS 紅綠燈',d:'站旁換上 BTS 專屬小綠人',w:'任何時間',lat:22.6206,lng:120.2872,q:'輕軌光榮碼頭站'},
+ {id:'lotus',c:'cheer',n:'蓮池潭龍虎塔',d:'亮紫燈，在左營',w:'晚上',lat:22.6795,lng:120.2950,q:'蓮池潭龍虎塔'},
+ {id:'dream',c:'cheer',n:'夢時代摩天輪',d:'亮紫燈；館內有名偵探柯南 30 週年展（到 12/19）',w:'晚上',lat:22.5951,lng:120.3070,q:'夢時代購物中心'},
+ {id:'h2o',c:'cheer',n:'H2O 水京棧酒店',d:'每晚 18:00–22:30 外牆紫燈＋「BTS Welcome」跑馬燈，到 11/22',w:'18:00–22:30',lat:22.6340,lng:120.2880,q:'H2O水京棧國際酒店'},
+ {id:'hanshin',c:'cheer',n:'漢神巨蛋購物廣場',d:'1F 戶外大螢幕＋B1 七米大道打上 I PURPLE YOU；巨蛋站周邊公車亭有應援看板',w:'白天',lat:22.6693,lng:120.3022,q:'漢神巨蛋購物廣場'},
+ {id:'samsung',c:'cheer',n:'三星沉浸星體驗區',d:'演唱會場外廣場，拍貼、巡演限定徽章抽獎',w:'演唱會當天',lat:22.7030,lng:120.2985,q:'高雄國家體育場'},
+ {id:'compose',c:'cafe',n:'COMPOSE COFFEE 篤敬門市',d:'V 代言的韓國咖啡，45 元起；拿黃色杯跟落地窗 V 海報合照',w:'白天',lat:22.6655,lng:120.3045,q:'COMPOSE COFFEE 篤敬'},
+ {id:'fullon',c:'cafe',n:'福容高雄店 田園咖啡廳',d:'紫色限定特調 160 元（到 12/6）；憑票根餐飲 88 折（到 11/30）',w:'任何時間',lat:22.6255,lng:120.2840,q:'福容大飯店 高雄'},
+ {id:'bars',c:'cafe',n:'「高雄微醺 Dynamite」餐酒館',d:'望樓、双黃、講古吧等 26 家推出紫色限定調飲（位置為示意）',w:'晚上',lat:22.6290,lng:120.2975,q:'高雄 望樓 酒吧'},
+ {id:'kmfa',c:'expo',n:'高雄市立美術館',d:'《日常・解碼》麥可．克雷格－馬丁（到 2027/3/7）、高雄獎 30 年（到 11/29）。週一休館 09:30–17:30',w:'白天',lat:22.6566,lng:120.2862,q:'高雄市立美術館'},
+ {id:'pier2',c:'expo',n:'駁二藝術特區',d:'高雄國際鋼雕藝術節 SUPER STAGE（到 11/22）、虎姑婆勇氣島大冒險（B10，到 12/20）',w:'白天',lat:22.6200,lng:120.2815,q:'駁二藝術特區'},
+ {id:'nstm',c:'expo',n:'科工館',d:'「船之所向」船舶與海洋科技展（到 11/20）',w:'白天',lat:22.6405,lng:120.3225,q:'國立科學工藝博物館'},
+ {id:'weiwu',c:'expo',n:'衛武營',d:'許常惠紀念特展，藝術迴廊（到 12/6）',w:'白天',lat:22.6245,lng:120.3410,q:'衛武營國家藝術文化中心'},
+ {id:'xizi',c:'sea',n:'西子灣',d:'中山大學旁海堤，看夕陽首選',w:'傍晚',lat:22.6245,lng:120.2652,q:'西子灣'},
+ {id:'consul',c:'sea',n:'打狗英國領事館',d:'山坡上的紅磚洋樓，俯瞰港口與西子灣夕陽',w:'傍晚',lat:22.6198,lng:120.2663,q:'打狗英國領事館文化園區'},
+ {id:'ferry',c:'sea',n:'鼓山輪渡站',d:'搭渡輪過港到旗津，船程很短，可帶悠遊卡／一卡通',w:'白天',lat:22.6208,lng:120.2712,q:'鼓山輪渡站'},
+ {id:'cijin',c:'sea',n:'旗津老街＋旗津海水浴場',d:'黑沙灘、海景，老街吃海產',w:'白天',lat:22.6085,lng:120.2672,q:'旗津海水浴場'},
+ {id:'tunnel',c:'sea',n:'旗津星空隧道',d:'彩色隧道，出口直接看海',w:'白天',lat:22.6115,lng:120.2655,q:'旗津星空隧道'},
+ {id:'hamasen',c:'sea',n:'哈瑪星鐵道文化園區',d:'舊鐵道草地、火車頭，旁邊就是駁二蓬萊區，超好拍',w:'下午',lat:22.6218,lng:120.2750,q:'哈瑪星鐵道文化園區'},
+ {id:'butoku',c:'sea',n:'武德殿＋哈瑪星老街區',d:'日式老建築、代天宮周邊小吃',w:'下午',lat:22.6240,lng:120.2722,q:'高雄武德殿'},
+ {id:'cijinpark',c:'sea',n:'旗津海岸公園（看夕陽）',d:'海邊步道與風車，夕陽直接落在海上',w:'日落約 17:10',lat:22.6035,lng:120.2690,q:'旗津海岸公園'},
+ {id:'bridge',c:'sea',n:'大港橋',d:'白色旋轉橋，港邊散步、夜景',w:'傍晚・晚上',lat:22.6195,lng:120.2790,q:'大港橋'},
+ {id:'pier',c:'sea',n:'真愛碼頭＋高雄港旅運中心',d:'亞洲新灣區港邊步道，晚上可順拍 85 大樓和高流紫燈',w:'晚上',lat:22.6150,lng:120.2930,q:'高雄港旅運中心'},
+ {id:'rainbow',c:'sea',n:'旗津彩虹教堂',d:'旗津海岸公園裡的彩色幾何裝置，旁邊還有大貝殼可以拍',w:'傍晚',lat:22.6050,lng:120.2700,q:'旗津彩虹教堂'},
+ {id:'lighthouse',c:'sea',n:'旗後燈塔',d:'爬上旗後山看港口全景，入夜也漂亮',w:'下午',lat:22.6152,lng:120.2652,q:'高雄燈塔 旗後燈塔'},
+ {id:'yazhen',c:'eat',n:'鴨肉珍',d:'鹽埕老店、米其林必比登；鴨肉飯小碗 60 元，鴨肉多汁、肉燥香',w:'駁二附近',lat:22.6268,lng:120.2868,q:'鴨肉珍 高雄鹽埕'},
+ {id:'borage',c:'eat',n:'The Borage 琉璃苣',d:'鹽埕第一公有零售市場裡的人氣小店，草莓雪酪好看又好吃',w:'駁二附近',lat:22.6252,lng:120.2840,q:'The Borage 鹽埕第一公有零售市場'},
+ {id:'hill',c:'eat',n:'駁二 微熱山丘',d:'鳳梨酥試吃配茶，可以順買伴手禮',w:'駁二',lat:22.6207,lng:120.2808,q:'微熱山丘 駁二'},
+ {id:'seaice',c:'eat',n:'渡船頭海之冰',d:'鼓山輪渡站旁，大碗公水果牛奶冰，人多一起吃最划算',w:'搭渡輪前',lat:22.6212,lng:120.2718,q:'渡船頭海之冰'},
+ {id:'cijinst',c:'eat',n:'旗津老街小吃',d:'烤小卷、赤肉焿、醬油番茄切盤、旗魚黑輪',w:'旗津',lat:22.6135,lng:120.2683,q:'旗津老街 廟前路'},
+ {id:'duckhorn',c:'eat',n:'鴨角活海產',d:'旗津海產店，入選市府「旗津綠色美食餐盤」',w:'旗津',lat:22.6128,lng:120.2678,q:'鴨角活海產 旗津'},
+ {id:'bowlice',c:'eat',n:'大碗公冰甜品',d:'旗津人氣冰店，大碗公冰',w:'旗津',lat:22.6146,lng:120.2692,q:'大碗公冰甜品 旗津'},
+ {id:'islander',c:'eat',n:'島民烘焙',d:'旗津在地麵包店，入選旗津綠色美食餐盤',w:'旗津',lat:22.6118,lng:120.2688,q:'島民烘焙 旗津'},
+ {id:'mofan',c:'eat',n:'墨凡美麗島商場（美麗島站內）',sd:'11/1–11/30 憑演唱會票根各店有優惠，11 家可吃可逛',d:'美麗島捷運站裡的商場，11/1–11/30 憑演唱會／表演票根結帳出示享優惠：\n・路人咖啡 4 號店：飲品＋甜點現折 $10\n・MR.HOKTO 生巧克力：夾心餅乾 2 入 $160（數量有限）\n・京都苑：芋頭肉鬆蜜柑燒＋冷泡茶 $115\n・歐呦goodgood：桑椹梅子泡泡飲買一送一\n・胖盒子鍋燒：點 2 份主食送泡菜（限量）\n・漩渦米線：點招牌叉燒米線，洛神莓莓茶半價\n・粕粕咖哩：點主餐加點炸物折 $50；憑票根送紫色地瓜球\n・好不咖啡 OKNOK：11 月限定紫醬雞腿義大利麵 $320\n・LORACORLO 以色列料理：BTS 雙人套餐 $999（11/6 起）\n・MORI 森系雜貨：兔兔商品 95 折\n（Threads／IG 分享）',w:'Threads 推薦',lat:22.6307,lng:120.3024,q:'美麗島捷運站 墨凡美麗島商場'},
+ {id:'certo',c:'cafe',n:'coffeecerto',sd:'BTS 限定 Purple Love 飲品，店內有 I PURPLE YOU 霓虹燈',d:'Purple Love 限定：桑桑美式 $150、桑鹽奶霜 $150、紫色浮島 $170。店內有 BTS I PURPLE YOU 霓虹燈。\n營業 11:00–18:00，週一、週二公休\n左營區至真路 21 號（巨蛋站 4 號出口步行約 10 分鐘）\n（Threads 分享）',w:'Threads 推薦',lat:22.6700,lng:120.3068,q:'coffeecerto 高雄市左營區至真路21號'},
+ {id:'souffle',c:'cafe',n:'稻稻生乳舒芙蕾－楠梓店',sd:'憑 BTS 票根送應援小物，演唱會期間開到 24:00',d:'憑 BTS 演唱會票根送應援小物一份（數量有限，送完為止）；送完後憑票根點餐 9 折。\n演唱會期間營業 11:00–24:00，散場後也能去\n楠梓區加昌路 961 號｜0958-175-715\n（Threads 分享）',w:'散場後',lat:22.7225,lng:120.3125,q:'稻稻生乳舒芙蕾 楠梓 加昌路961號'},
+ {id:'laisuo',c:'eat',n:'來嗦粉 同盟高醫店（螺螄粉）',sd:'演唱會期間發燈箱＋小菜兌換券，營業到 23:00',d:'螺螄粉專賣，營業到晚上 11 點。演唱會期間送燈箱＋小菜兌換券，分時段發放（截圖可見 11/14–18、11/23 每天 11:00、18:00 各 10 個；11/19–22 的時段請看他們的 Threads @laisuo_tmkmu）。\n位置在高醫附近同盟路一帶（圖上為示意）',w:'Threads 推薦',lat:22.6468,lng:120.3095,q:'來嗦粉 同盟高醫店'},
+ {id:'meatsolo',c:'eat',n:'本炙所 板前燒肉 MEAT SOLO 裕誠店',sd:'巨蛋商圈個人燒肉，開到凌晨 2 點，散場宵夜',d:'一人一份的板前燒肉，198 元起的套餐含羽釜飯、湯、沙拉、漬物、肉盤，不收服務費；澳洲和牛肋眼加購 98 元起。營業到凌晨 2 點。\n巨蛋商圈裕誠路（圖上為示意）\n（Threads 留言推薦）',w:'宵夜・到 02:00',lat:22.6645,lng:120.3030,q:'本炙所板前燒肉 MEAT SOLO 高雄裕誠店'},
+ {id:'dingwang1',c:'eat',n:'鼎王麻辣鍋 富國店',sd:'巨蛋附近，營業到凌晨 2 點',d:'麻辣鍋、酸菜白肉鍋，鴨血豆腐可以無限續加。\n左營區明華一路 191 號｜07-550-7668\n營業 11:30 到隔天 02:00（出發前再確認）',w:'宵夜・到 02:00',lat:22.6655,lng:120.2985,q:'鼎王麻辣鍋 高雄富國店 明華一路191號'},
+ {id:'dingwang2',c:'eat',n:'鼎王麻辣鍋 七賢店',sd:'離住宿較近，深夜也有開',d:'麻辣鍋、酸菜白肉鍋，鴨血豆腐無限續加。\n新興區七賢二路 16 號｜07-286-2558\n深夜有營業，凌晨約 2–5 點休息（出發前再確認）',w:'離住宿近',lat:22.6345,lng:120.3035,q:'鼎王麻辣鍋 高雄七賢店'},
+ {id:'hdl1',c:'eat',n:'海底撈 漢神巨蛋店',sd:'營業到凌晨 4 點，散場宵夜首選',d:'漢神巨蛋 6 樓，營業 11:00 到凌晨 04:00、沒有用餐時間限制。\n百貨打烊後：從新榮街漢來大飯店 1F 大廳搭電梯直達 6F。\n左營區博愛二路 767 號 6F｜07-559-7505',w:'宵夜・到 04:00',lat:22.6690,lng:120.3018,q:'海底撈 高雄漢神巨蛋店'},
+ {id:'hdl2',c:'eat',n:'海底撈 高雄大遠百店',sd:'三多商圈，離住宿近',d:'在三多商圈的大遠百裡，離昭來商旅比較近。營業時間出發前再確認。',w:'離住宿近',lat:22.6135,lng:120.3055,q:'海底撈 高雄大遠百店'},
+ {id:'sauerfish',c:'eat',n:'聞雞起爐（酸菜魚吃到飽）',sd:'港式火鍋吃到飽，有酸菜魚，巨蛋附近',d:'港式火鍋吃到飽，主打酸菜魚，有自助吧、港式飲品、冰淇淋（2024 報導寫 499 元起，現價請再確認）。\n左營區自由二路 329 號，漢神巨蛋附近、離義享天地也不遠',w:'巨蛋附近',lat:22.6610,lng:120.3095,q:'聞雞起爐 高雄左營自由二路329號'},
+ {id:'tangzhan',c:'eat',n:'湯棧 中山店（火鍋）',sd:'飯店附近，開到半夜 2:00',d:'飯店附近、看起來很好吃的火鍋，營業到半夜 2:00，散場回飯店也能吃宵夜。\n（位置為示意，用下方 Google 地圖連結導航）',w:'離住宿近・到 02:00',lat:22.6232,lng:120.3070,q:'湯棧 高雄中山店',url:'https://maps.app.goo.gl/RYhhfQCj3seZVQph7?g_st=ic'},
+ {id:'awaken',c:'cafe',n:'咖啡覺醒 中山店',sd:'飯店附近、不限時，08:00–22:50，不能訂位',d:'飯店附近的咖啡廳，不限時，可以坐著休息、整理應援物。\n營業 08:00–22:50\n❌ 不能訂位\n（位置為示意，用下方 Google 地圖連結導航）',w:'離住宿近・不限時',lat:22.6190,lng:120.3068,q:'咖啡覺醒 高雄中山店',url:'https://maps.app.goo.gl/RCQ45BvHDkWC8CWS6?g_st=ic'},
+ {id:'tetea',c:'cafe',n:'特好喝 紫玉系列（BTS 紫色飲品）',sd:'11/19 上市，7 款紫玉甘薯新品，全台門市',d:'特好喝 × BLUE ELEPHANT PURPLE LOVE PROJECT，11/19 起推出台灣紫玉甘薯做的 7 款紫色新品：\n・波啷嘿紫玉蒙布朗：紫玉三茉、紫玉穀王、紫玉抹茶\n・波啷嘿紫玉：紫玉三茉輕潤奶、紫玉穀王輕潤奶、紫玉抹茶沙沙、紫玉鮮奶\n全台門市一起參與紫色應援活動。試喝心得推「紫玉穀王」，奶蓋鹹甜綿密，一分糖就夠。\n（圖上標一間高雄門市為示意，到 Google 地圖搜尋「特好喝」找最近的）',w:'11/19 起',lat:22.6195,lng:120.3040,q:'特好喝 高雄',links:[{t:'Threads 貼文',u:'https://www.threads.com/share/_7BxvOi7a'}]},
+ {id:'taicheng_zy',c:'eat',n:'太成肉包 左營店（紫色限定版）',sd:'紫色限定肉包、藍莓牛奶饅頭，$45，捷運左營站出口',d:'為了 BTS 開唱推出紫色限定版肉包（外皮紫色，肉包大顆、湯汁多），還有藍莓牛奶饅頭（吃得到堅果顆粒跟藍莓）。約 $45。\n左營店就在捷運左營站（R16）出口，高鐵左營站轉乘最方便。\n（位置為示意，用 Google 地圖導航）',w:'捷運左營站',lat:22.6870,lng:120.3070,q:'太成肉包 左營店',links:[{t:'Threads 貼文',u:'https://www.threads.com/share/BBrwLEZ50m'},{t:'太成 IG',u:'https://www.instagram.com/taichen_1936/'}]},
+ {id:'taicheng_sugar',c:'eat',n:'太成肉包 橋頭糖廠店（紫色限定版）',sd:'捷運橋頭糖廠站步行約 1 分鐘',d:'紫色限定肉包、藍莓牛奶饅頭，約 $45。\n捷運橋頭糖廠站（R22A）步行約 1 分鐘，可以順便逛橋頭糖廠。\n（位置為示意）',w:'橋頭',lat:22.7590,lng:120.3085,q:'太成肉包 糖廠店',links:[{t:'Threads 貼文',u:'https://www.threads.com/share/BBrwLEZ50m'}]},
+ {id:'taicheng_hq',c:'eat',n:'太成肉包 橋頭總店（紫色限定版）',sd:'捷運橋頭火車站步行約 7 分鐘，90 年老店',d:'90 年老店的創始店，在台一線上。紫色限定肉包、藍莓牛奶饅頭，約 $45。\n捷運橋頭火車站（R23）步行約 7 分鐘。\n（位置為示意）',w:'橋頭',lat:22.7575,lng:120.3035,q:'太成肉包 橋頭總店',links:[{t:'Threads 貼文',u:'https://www.threads.com/share/BBrwLEZ50m'}]},
+ {id:'xmas',c:'event',n:'2026 高雄聖誕生活節 @ 中央公園',sd:'每日 17:30–24:00 亮燈，每 30 分鐘一場雪花燈光秀',d:'展燈 2026/11/13–2027/1/3，每日 17:30–24:00 亮燈。主燈每 30 分鐘一場雪花燈光秀搭配聖誕音樂，22:00 後為無音樂版。中山一路人行道還有耶誕小鎮市集。\n（Threads 分享）',w:'晚上',lat:22.6228,lng:120.3018,q:'高雄中央公園'},
+ {id:'f_knife',c:'eat',n:'第一家刀削麵＋榮園餡餅粥',d:'左營大路上兩家眷村老店相鄰：50 年刀削麵、爆餡韭菜盒。離世運開車約 3 分鐘，演唱會日午餐首選',w:'演唱會日午餐',lat:22.6830,lng:120.2935,q:'第一家刀削麵 高雄市左營區左營大路611-1號'},
+ {id:'f_egg',c:'eat',n:'蛋餅王（肉粽蛋餅）',d:'左營大路240號，招牌肉粽蛋餅。05:30–12:00，週四休（11/19 不能吃）',w:'早餐',lat:22.6755,lng:120.2925,q:'蛋餅王 高雄市左營區左營大路240號'},
+ {id:'f_hong',c:'eat',n:'弘記肉燥飯舖',d:'米其林必比登推介，肉燥飯、豬腳庫飯、魚丸湯。巨蛋站可步行，可以順路 COMPOSE COFFEE',w:'午餐・晚餐',lat:22.6702,lng:120.3005,q:'弘記肉燥飯舖 左營區立文路96號'},
+ {id:'f_fish',c:'eat',n:'尚芳土魠魚羹',d:'鹽埕 30 年老店，土魠魚酥香不軟爛',w:'駁二順路',lat:22.6243,lng:120.2852,q:'尚芳土魠魚羹 鹽埕'},
+ {id:'f_snack',c:'eat',n:'鹽埕銅板小吃',d:'下一鍋水煎包（常要等下一鍋）、王家手工豆花（金桔檸檬豆花）、阿進切仔麵',w:'下午點心',lat:22.6262,lng:120.2808,q:'下一鍋水煎包 鹽埕'},
+ {id:'f_oden',c:'eat',n:'漁塘黑輪',d:'西子灣一甲子黑輪老店，看夕陽前後吃',w:'西子灣順路',lat:22.6232,lng:120.2688,q:'漁塘黑輪 西子灣'},
+ {id:'f_xlj',c:'eat',n:'興隆居',d:'前金區一甲子早餐老店，湯包、燒餅',w:'早餐',lat:22.6302,lng:120.2965,q:'興隆居 高雄 六合二路'},
+ {id:'dance',c:'event',n:'K-POP 隨播即跳 @ 中央公園',d:'11/20、11/21 每晚 18:30，送限量應援摺扇、拍貼巴士',w:'18:30',lat:22.6235,lng:120.3005,q:'中央公園 高雄'},
+ {id:'coupon',c:'event',n:'憑票根換券（捷運站）',d:'左營、美麗島、巨蛋、三多商圈、高雄車站換 50 元券＋100 元數位券，最多 150 元（圖上標美麗島站）',w:'任何時間',lat:22.6312,lng:120.3020,q:'高雄捷運美麗島站'},
+ {id:'coupon_sanduo',c:'event',n:'三多商圈站換券（離飯店最近）',sd:'憑門票換 50 元商圈夜市券＋100 元一卡通數位券',d:'5 個換券點裡離昭來商旅最近的一站。憑演唱會門票換 50 元「商圈夜市優惠券」，加上一卡通 100 元數位券，最多 150 元；用 iPASS MONEY APP 領券再送一卡通儲值卡 1 張。\n可在全市 40 多處商圈夜市、500 多家店折抵（自強夜市也可以用看看）。',w:'離住宿近',lat:22.6140,lng:120.3045,q:'高雄捷運三多商圈站'},
+ {id:'cpark_deal',c:'event',n:'中央公園商圈 14 家 ARMY 優惠',sd:'11/18–22 出示門票：小杯飲品、小菜或 9 折',d:'11/18–22 到中央公園商圈 14 家合作店家消費，出示演唱會門票，依各店活動送小杯飲品（shot）、小菜或打 9 折。\n店家名單看高雄市經發局 FB／IG（@edbkh）或 khafterparty.tw。\n走路就到，離飯店很近',w:'離住宿近',lat:22.6250,lng:120.2992,q:'中央公園商圈 高雄'},
+ {id:'cpark_deco',c:'cheer',n:'中央公園紫色布置',sd:'應援氣球、紫色串旗，傳出會有紫色聖誕樹',d:'中央公園商圈會掛上應援氣球、紫色串旗，也傳出會有紫色聖誕樹。晚上剛好跟聖誕生活節的燈一起拍，回飯店順路。',w:'晚上・離住宿近',lat:22.6222,lng:120.2995,q:'高雄中央公園'},
+ {id:'zq_market',c:'eat',n:'自強夜市（苓雅夜市）',sd:'在地人愛去的夜市，不擁擠、價格友善，走路可到',d:'在地人推薦的夜市，多半是有店面的老店，價格友善、不像觀光夜市那麼擠。熱門小吃常提早賣完。\n苓雅二路、自強三路一帶（位置為示意）',w:'離住宿近',lat:22.6198,lng:120.3010,q:'自強夜市 苓雅夜市 高雄'},
+ {id:'zq_nanfeng',c:'eat',n:'南豐魯肉飯',sd:'自強夜市 50 年老店，爌肉飯、獅子頭、酸菜',d:'自強夜市排隊老店。招牌是爌肉飯（菜單寫魯肉飯），肥瘦相間、入口即化；獅子頭、酸菜、苦瓜封湯也推薦。\n（位置為示意）',w:'離住宿近',lat:22.6204,lng:120.3002,q:'南豐魯肉飯 高雄苓雅'},
+ {id:'zq_baitang',c:'eat',n:'老牌白糖粿',sd:'自強三路與苓雅二路口，現炸，14:30–20:20',d:'50 多年老店，現點現炸，外酥內 Q 像麻糬，裹花生粉或芝麻粉；也有紫米白糖粿（應援色！）。\n苓雅區自強三路與苓雅二路路口\n14:30–20:20，不定期公休',w:'下午點心',lat:22.6196,lng:120.3014,q:'老牌白糖粿 自強三路 苓雅二路'},
+ {id:'zq_wen',c:'eat',n:'溫の暖湯',sd:'麻辣鍋、酸辣粉，晚上到 23:30，週六日休',d:'吧檯攤車座位，麻辣鍋可調辣度，綜合酸辣粉湯可以直接喝。\n苓雅區苓雅二路 99 號｜0908-839-619\n11:00–13:00、17:00–23:30（週六、日公休）\n→ 11/19、11/20 晚上可以吃，11/21、11/22 休息',w:'宵夜・週六日休',lat:22.6192,lng:120.3004,q:'溫の暖湯 高雄苓雅二路99號'},
+ {id:'zq_garlic',c:'eat',n:'春日蒜香豆干',sd:'蒜香豆干、臭豆腐，18:00 開到 24:00，週二休',d:'大量蒜頭的蒜香豆干，還有臭豆腐、豆皮、米血，可以加辣。\n苓雅區苓雅二路 115 號｜0920-094-822\n18:00–00:00（週二公休），散場回飯店還來得及',w:'宵夜・到 24:00',lat:22.6190,lng:120.3008,q:'春日蒜香豆干 高雄苓雅二路115號'},
+ {id:'zq_taro',c:'eat',n:'甘家冷凍芋',sd:'冷凍芋、檸檬豆花，自強夜市甜品',d:'芋頭綿密、湯頭清甜，也有檸檬豆花。吃完鹹的來一碗。\n（位置為示意）',w:'離住宿近',lat:22.6201,lng:120.3018,q:'甘家冷凍芋 高雄苓雅'},
+ {id:'c_14g',c:'cafe',n:'14克咖啡',sd:'中央公園站附近小咖啡店，11:00–18:00，均消約 140',d:'中央公園站附近的小咖啡店，均消約 140 元。\n苓雅區自強三路 53 巷 6 號\n11:00–18:00（出發前再確認公休日）',w:'離住宿近',lat:22.6226,lng:120.3022,q:'14克咖啡 高雄苓雅區自強三路53巷6號'},
+ {id:'c_furu',c:'cafe',n:'Furu Cafe',sd:'日式昭和喫茶店風，12:00–19:00',d:'日式昭和風復古喫茶店，咖啡和甜點，均消約 300 元。\n苓雅區仁德街 201 號\n12:00–19:00（出發前再確認公休日）\n（位置為示意）',w:'離住宿近',lat:22.6250,lng:120.3060,q:'Furu Cafe 高雄苓雅區仁德街201號'},
+ {id:'ruifeng',c:'event',n:'瑞豐夜市',d:'應援布置、街頭快閃',w:'晚上',lat:22.6655,lng:120.2995,q:'瑞豐夜市'},
+ {id:'liuhe',c:'event',n:'六合夜市',d:'應援布置、街頭快閃',w:'晚上',lat:22.6315,lng:120.2985,q:'六合夜市'}
+];
+const ROUTE=[
+ {p:'pier2',x:'駁二藝術特區・倉庫、鋼雕藝術節'},
+ {p:'bridge',x:'大港橋・白色旋轉橋'},
+ {p:'hamasen',x:'哈瑪星鐵道文化園區・鐵道草地'},
+ {p:'butoku',x:'武德殿＋哈瑪星老街'},
+ {p:'ferry',x:'鼓山輪渡站 → 搭渡輪到旗津',nx:'ferry',f:1},
+ {p:'cijinst',x:'旗津老街・邊走邊吃'},
+ {p:'lighthouse',x:'旗後燈塔（體力夠再爬）'},
+ {p:'tunnel',x:'旗津星空隧道'},
+ {p:'rainbow',x:'彩虹教堂＋大貝殼'},
+ {p:'cijinpark',x:'旗津海岸公園看夕陽',nx:'walkferry'},
+ {p:'ferry',x:'渡輪回鼓山',f:1}
+];
+const EATS=['yazhen','borage','hill','seaice','cijinst','duckhorn','bowlice','islander'];
+const FANP=[{"id": "f_BTS-kh-bus", "c": "fan", "t": "公車站牌", "mem": "BTS", "n": "BTS高雄演唱會公車站牌應援", "sd": "公車站牌｜11/10-12/10", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/10-12/10\n💡 捷運巨蛋站二號出口\n成員：BTS\n主辦：@maikaimakana\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665568, "lng": 120.303067, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAECa5Oj3-/"}, {"t": "主辦", "u": "https://www.threads.com/@maikaimakana"}], "dates": [], "start": "2026-11-10", "end": "2026-12-10"}, {"id": "f_jm-bus-stop2", "c": "fan", "t": "公車站牌", "mem": "JIMIN", "n": "JIMIN 公車站牌", "sd": "公車站牌｜10/21–11/30，24 小時", "d": "📍 高雄市楠梓區左楠路1號左楠路上（世運）\n⏰ 10/21–11/30，24 小時\n💡 捷運世運站四號出口\n成員：JIMIN\n主辦：@sun_to_jm\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701885, "lng": 120.302499, "q": "高雄市楠梓區左楠路1號左楠路上", "links": [{"t": "公告", "u": "https://www.threads.com/share/_wU8e_r4q/"}, {"t": "主辦", "u": "https://www.threads.com/@sun_to_jm"}], "dates": [], "start": "2026-10-21", "end": "2026-11-30"}, {"id": "f_jm-bus-stop", "c": "fan", "t": "公車站牌", "mem": "JIMIN", "n": "JIMIN 智旻公車站牌", "sd": "公車站牌｜10/20–11/30，24 小時", "d": "📍 高雄市楠梓區左楠路1號左楠路上（世運）\n⏰ 10/20–11/30，24 小時\n💡 捷運世運站四號出口\n成員：JIMIN\n主辦：@fang.xiii13\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701985, "lng": 120.302399, "q": "高雄市楠梓區左楠路1號左楠路上", "links": [{"t": "公告", "u": "https://www.threads.com/share/D8rrFUxdC/"}, {"t": "主辦", "u": "https://www.threads.com/@fang.xiii13"}], "dates": [], "start": "2026-10-20", "end": "2026-11-30"}, {"id": "f_jin-BUS-kh1", "c": "fan", "t": "公車站牌", "mem": "JIN", "n": "JIN公車站牌", "sd": "公車站牌｜11/8-11/30", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/8-11/30\n💡 捷運巨蛋站二號出口\n成員：JIN\n主辦：@_ii_ii_7\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665668, "lng": 120.303167, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/Gb_dWv3h2/"}, {"t": "主辦", "u": "https://www.threads.com/@_ii_ii_7"}], "dates": [], "start": "2026-11-08", "end": "2026-11-30"}, {"id": "f_jin-BUS-kh2", "c": "fan", "t": "公車站牌", "mem": "JIN", "n": "金碩珍高雄場演唱會公車站應援看板", "sd": "公車站牌｜11/9-12/9", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/9-12/9\n💡 捷運巨蛋站一號出口\n成員：JIN\n主辦：@rubywannnnnnnnn\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665468, "lng": 120.302967, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/D4fxTXB-m"}, {"t": "主辦", "u": "https://www.threads.com/@rubywannnnnnnnn"}], "dates": [], "start": "2026-11-09", "end": "2026-12-09"}, {"id": "f_jin-BUS-kh3", "c": "fan", "t": "公車站牌", "mem": "JIN", "n": "JIN 高雄世運演唱會應援", "sd": "公車站牌｜11/8-12/8", "d": "📍 高雄捷運美麗島站（美麗島）\n⏰ 11/8-12/8\n💡 捷運美麗島站10號出口\n成員：JIN\n主辦：@ping10221204\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.632952, "lng": 120.301934, "q": "高雄捷運美麗島站", "links": [{"t": "公告", "u": "https://www.threads.com/share/H6a2HQkDq"}, {"t": "主辦", "u": "https://www.threads.com/@ping10221204"}], "dates": [], "start": "2026-11-08", "end": "2026-12-08"}, {"id": "f_JK-BUS-kh1", "c": "fan", "t": "公車站牌", "mem": "Jungkook", "n": "JUNGKOOK 柾國公車站牌（巨蛋）", "sd": "公車站牌｜11/3-12/3", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/3-12/3\n💡 捷運巨蛋站二號出口\n成員：Jungkook\n主辦：@jkwfsa.613\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665768, "lng": 120.303267, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.instagram.com/p/DfJ4jnjBmL7/"}, {"t": "主辦", "u": "https://www.threads.com/@jkwfsa.613"}], "dates": [], "start": "2026-11-03", "end": "2026-12-03"}, {"id": "f_JK-BUS-kh2", "c": "fan", "t": "公車站牌", "mem": "Jungkook", "n": "JUNGKOOK 柾國公車站牌（世運）", "sd": "公車站牌｜11/1–11/30，24 小時", "d": "📍 高雄市楠梓區左楠路1號左楠路上（世運）\n⏰ 11/1–11/30，24 小時\n💡 捷運世運站4號出口\n成員：Jungkook\n主辦：@to_jungkook.97\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701785, "lng": 120.302599, "q": "高雄市楠梓區左楠路1號左楠路上", "links": [{"t": "公告", "u": "https://www.threads.com/share/FpRzVDxGp/"}, {"t": "主辦", "u": "https://www.threads.com/@to_jungkook.97"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_JK-BUS-kh3", "c": "fan", "t": "公車站牌", "mem": "Jungkook", "n": "JUNGKOOK 柾國三多公車站牌", "sd": "公車站牌｜11/1-11/30", "d": "📍 高雄捷運三多商圈站（三多）\n⏰ 11/1-11/30\n💡 捷運三多站三號出口\n成員：Jungkook\n主辦：@_jungkookie.91\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.613183, "lng": 120.305052, "q": "高雄捷運三多商圈站", "links": [{"t": "公告", "u": "https://www.instagram.com/p/Dcube7zJ5up/"}, {"t": "主辦", "u": "https://www.instagram.com/_jungkookie.91/"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_km-kh-bus", "c": "fan", "t": "公車站牌", "mem": "Jungkook、JIMIN", "n": "國旻嗑糖趣— 智旻 & 柾國 公車站牌", "sd": "公車站牌｜11/4-12/10", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/4-12/10\n💡 捷運巨蛋站4號出口\n成員：Jungkook、JIMIN\n主辦：@kookmin_fun_taiwan\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665368, "lng": 120.302867, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/FYlWibcrG"}, {"t": "主辦", "u": "https://www.threads.com/@kookmin_fun_taiwan"}], "dates": [], "start": "2026-11-04", "end": "2026-12-10"}, {"id": "f_rm-bus", "c": "fan", "t": "公車站牌", "mem": "RM", "n": "南俊高雄巨蛋公車站牌", "sd": "公車站牌｜11/09-12上旬", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/09-12上旬\n💡 捷運巨蛋站一號出口\n成員：RM\n主辦：@whalien875\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665868, "lng": 120.302767, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/Bm5E8wmzMB"}, {"t": "主辦", "u": "https://www.threads.com/@whalien875"}], "dates": [], "start": "2026-11-09", "end": "2026-12-01"}, {"id": "f_sg-kh-bus", "c": "fan", "t": "公車站牌", "mem": "SUGA", "n": "SUGA高雄公車站牌", "sd": "公車站牌｜11/5-12/5", "d": "📍 高雄捷運三多商圈站（三多）\n⏰ 11/5-12/5\n💡 捷運三多站一號出口\n成員：SUGA\n主辦：@romeya.tw\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.613383, "lng": 120.304852, "q": "高雄捷運三多商圈站", "links": [{"t": "公告", "u": "https://www.threads.com/share/EoDD7UCFh"}, {"t": "主辦", "u": "https://www.threads.com/@romeya.tw"}], "dates": [], "start": "2026-11-05", "end": "2026-12-05"}, {"id": "f_vk-kh-bus1", "c": "fan", "t": "公車站牌", "mem": "V、JUNGKOOK", "n": "柾泰高雄公車站應援（巨蛋）", "sd": "公車站牌｜11/9-12/9", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/9-12/9\n💡 捷運巨蛋站二號出口\n成員：V、JUNGKOOK\n主辦：@amemakana\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665268, "lng": 120.303367, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/Eh2dBNhZn"}, {"t": "主辦", "u": "https://www.threads.com/@amemakana"}], "dates": [], "start": "2026-11-09", "end": "2026-12-09"}, {"id": "f_vk-kh-bus2", "c": "fan", "t": "公車站牌", "mem": "V、JUNGKOOK", "n": "柾泰公車站牌（世運）", "sd": "公車站牌｜10/21–11/30，24 小時", "d": "📍 高雄市左楠路上近宏毅一路（世運）\n⏰ 10/21–11/30，24 小時\n💡 捷運世運站1號出口\n成員：V、JUNGKOOK\n主辦：@team.taekookie、@v.k_snow、@kookv_taiwan\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.702085, "lng": 120.302699, "q": "高雄市左楠路上近宏毅一路", "links": [{"t": "公告", "u": "https://www.threads.com/share/HfOqBdr15/"}, {"t": "主辦", "u": "https://www.threads.com/@team.taekookie"}], "dates": [], "start": "2026-10-21", "end": "2026-11-30"}, {"id": "f_BTS-NIKEpopup", "c": "fan", "t": "快閃店", "mem": "BTS", "n": "BTS NIKE 限定店", "sd": "快閃店｜10/30-11/30 11:00-22:00", "d": "📍 高雄漢神巨蛋購物廣場 3F（巨蛋）\n⏰ 10/30-11/30 11:00-22:00\n💡 摩曼頓\n成員：BTS\n主辦：@hybe\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.6702, "lng": 120.3031, "q": "高雄漢神巨蛋購物廣場 3F", "links": [], "dates": [], "start": "2026-10-30", "end": "2026-11-30"}, {"id": "f_BTS-popup", "c": "fan", "t": "快閃店", "mem": "BTS", "n": "POP-UP : ARIRANG（官方快閃）", "sd": "快閃店｜11/5-11/23", "d": "📍 E SKY MALL（義享天地）1F（凹子底）\n⏰ 11/5-11/23\n🏷 需預約入場\n成員：BTS\n主辦：@hybe\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.656667, "lng": 120.30634, "q": "高雄 E SKY MALL（義享天地）1F", "links": [{"t": "公告", "u": "https://weverse.io/bts/notice/40411"}], "dates": [], "start": "2026-11-05", "end": "2026-11-23"}, {"id": "f_lador-popup", "c": "fan", "t": "快閃店", "mem": "JIMIN", "n": "LADOR 高雄快閃店", "sd": "快閃店｜11/1–11/30", "d": "📍 高雄漢神巨蛋購物廣場 3F（巨蛋）\n⏰ 11/1–11/30\n💡 Pure Way 專櫃旁\n成員：JIMIN\n主辦：@lador_tw\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.67, "lng": 120.3029, "q": "高雄漢神巨蛋購物廣場 3F", "links": [{"t": "主辦", "u": "https://www.threads.com/@lador_tw"}, {"t": "公告", "u": "https://www.instagram.com/p/DeqjXImpYcm/"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_GIN-POPUP", "c": "fan", "t": "快閃店", "mem": "JIN", "n": "IGIN PARK in TAIWAN", "sd": "快閃店｜11:00～21:30", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11:00～21:30\n成員：JIN\n主辦：@igin.official\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688448, "lng": 120.309159, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "主辦", "u": "https://www.threads.com/@igin.official"}, {"t": "公告", "u": "https://www.threads.com/share/D7Zy4d8-0"}], "dates": [], "start": "2026-11-17", "end": "2026-11-23"}, {"id": "f_jin-exhibit", "c": "fan", "t": "展覽", "mem": "JIN", "n": "小勇敢 JIN’S LOVE QUEST", "sd": "展覽｜11/20、11/21 10:00–19:00，11/22 10:00–14:30", "d": "📍 Pinway 8號倉庫（鹽埕區瀨南街8號二樓）（駁二）\n⏰ 11/20、11/21 10:00–19:00，11/22 10:00–14:30\n💡 會有現場門票販售，注意主辦公告\n🏷 付費報名入場\n成員：JIN\n主辦：@ourbabyjin92\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/20・11/21・11/22", "lat": 22.6211, "lng": 120.2805, "q": "高雄 Pinway 8號倉庫（鹽埕區瀨南街8號二樓）", "links": [{"t": "公告", "u": "https://www.threads.com/share/GMpU7TnnA/"}, {"t": "主辦", "u": "https://www.threads.com/@ourbabyjin92"}], "dates": ["11/20", "11/21", "11/22"], "start": "2026-11-20", "end": "2026-11-22"}, {"id": "f_jk-exhitbit", "c": "fan", "t": "展覽", "mem": "Jungkook", "n": "(STILL)IN WAVES", "sd": "展覽｜11/13-11/22 11:00-23:30（六日到 00:00）", "d": "📍 森森燒肉中正店（美麗島）\n⏰ 11/13-11/22 11:00-23:30（六日到 00:00）\n💡 點餐消費一人一份，點餐時隨餐附贈\n成員：Jungkook\n主辦：@to_jungkook.97\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.631065, "lng": 120.306784, "q": "高雄 森森燒肉中正店", "links": [{"t": "公告", "u": "https://www.threads.com/share/FF7CNRmmK"}, {"t": "主辦", "u": "https://www.threads.com/@to_jungkook.97"}], "dates": [], "start": "2026-11-13", "end": "2026-11-22"}, {"id": "f_rm-711-ad", "c": "fan", "t": "超商廣告", "mem": "RM", "n": "RM 超商應援", "sd": "超商廣告｜11/19-11/22", "d": "📍 高雄部分 7-11（高雄）\n⏰ 11/19-11/22\n💡 ① 晉學門市 ② 坎城門市 ③ 高雄門市 ④ 勵志門市 ⑤ 新保泰門市（圖上為其中一間）\n成員：RM\n主辦：@first_love_.sg39\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.73212, "lng": 120.27616, "q": "高雄部分 7-11", "links": [{"t": "公告", "u": "https://www.threads.com/share/DbN7x3GdA"}, {"t": "主辦", "u": "https://www.threads.com/@first_love.sg39"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_SUGA-711-ad", "c": "fan", "t": "超商廣告", "mem": "SUGA", "n": "SUGA 超商應援", "sd": "超商廣告｜11/19-11/22", "d": "📍 7-11 高雄巨漢門市（巨蛋）\n⏰ 11/19-11/22\n成員：SUGA\n主辦：@first_love_.sg39\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.670727, "lng": 120.30196, "q": "7-11 高雄巨漢門市", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAcxPu70a7"}, {"t": "主辦", "u": "https://www.threads.com/@first_love.sg39"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_BTS-kh-bii3", "c": "fan", "t": "燈箱/看板", "mem": "BTS", "n": "夢時代美食街 4 樓看板", "sd": "燈箱/看板｜11/13-11/30", "d": "📍 高雄夢時代 4F 美食街（夢時代）\n⏰ 11/13-11/30\n成員：BTS\n主辦：@joycejang66\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.595224, "lng": 120.305615, "q": "高雄夢時代 4F 美食街", "links": [{"t": "公告", "u": "https://www.threads.com/share/Gbpkmywnb"}, {"t": "主辦", "u": "https://www.threads.com/@joycejang66"}], "dates": [], "start": "2026-11-13", "end": "2026-11-30"}, {"id": "f_BTS-kh-bii2", "c": "fan", "t": "燈箱/看板", "mem": "BTS", "n": "夢時代美食街 6 樓看板", "sd": "燈箱/看板｜11/13-11/30", "d": "📍 高雄夢時代 6F 美食街（夢時代）\n⏰ 11/13-11/30\n成員：BTS\n主辦：@joycejang66\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.595024, "lng": 120.305815, "q": "高雄夢時代 6F 美食街", "links": [{"t": "公告", "u": "https://www.threads.com/share/Gbpkmywnb"}, {"t": "主辦", "u": "https://www.threads.com/@joycejang66"}], "dates": [], "start": "2026-11-13", "end": "2026-11-30"}, {"id": "f_BTS-kh-bii1", "c": "fan", "t": "燈箱/看板", "mem": "BTS", "n": "Event 壁貼應援", "sd": "燈箱/看板｜11/1-11/30", "d": "📍 高雄捷運世運站（世運）\n⏰ 11/1-11/30\n💡 捷運世運站近3、4號出口\n成員：BTS\n主辦：@armylunchmeat\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701685, "lng": 120.302299, "q": "高雄捷運世運站", "links": [{"t": "公告", "u": "https://www.threads.com/share/BA-P2QgVtR/"}, {"t": "主辦", "u": "https://www.threads.com/@armylunchmeat"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_JHOPE-KH-BII1", "c": "fan", "t": "燈箱/看板", "mem": "J-HOPE", "n": "J-HOPE 應援看板・方師傅點心坊上方（自由路）", "sd": "燈箱/看板｜11/9-11/23｜方師傅點心坊（高雄自由店）上方", "d": "📍 左營區自由二路393號，方師傅點心坊（高雄自由店）樓上（巨蛋）\n⏰ 11/9-11/23\n💡 自由路、裕誠路口｜巨蛋河堤商圈\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）\n設計：@tae.memory.a｜高雄第四彈", "w": "整段期間", "lat": 22.665515, "lng": 120.308365, "q": "方師傅點心坊 高雄自由店", "links": [{"t": "看板貼文", "u": "https://www.threads.com/share/BA7abH4eSc"}, {"t": "公告", "u": "https://www.threads.com/share/GYdC0BNu1"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-09", "end": "2026-11-23"}, {"id": "f_JHOPE-KH-BII2", "c": "fan", "t": "燈箱/看板", "mem": "J-HOPE", "n": "J-HOPE 世運站壁貼", "sd": "燈箱/看板｜11/1-11/30", "d": "📍 高雄捷運世運站（世運）\n⏰ 11/1-11/30\n💡 捷運世運站近1號出口\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701585, "lng": 120.302199, "q": "高雄捷運世運站", "links": [{"t": "公告", "u": "https://www.threads.com/share/EHLsbI7aH/"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_JM-KH", "c": "fan", "t": "燈箱/看板", "mem": "JIMIN", "n": "LADOR 巨蛋站壁貼", "sd": "燈箱/看板｜10/29-11/30", "d": "📍 高雄捷運巨蛋站（巨蛋）\n⏰ 10/29-11/30\n💡 5號出口\n成員：JIMIN\n主辦：@lador_tw\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665168, "lng": 120.302767, "q": "高雄捷運巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/GoMzUnyEI"}, {"t": "主辦", "u": "https://www.threads.com/@lador_tw"}], "dates": [], "start": "2026-10-29", "end": "2026-11-30"}, {"id": "f_km-kh-bii", "c": "fan", "t": "燈箱/看板", "mem": "JIMIN、JUNGKOOK", "n": "國旻嗑糖趣— 智旻 & 柾國 燈箱", "sd": "燈箱/看板｜11/13-11/30", "d": "📍 高雄捷運 R14 巨蛋站（巨蛋）\n⏰ 11/13-11/30\n💡 巨蛋站出口3，服務台左後側牆壁 L4 燈箱，從服務台旁閘門進站\n成員：JIMIN、JUNGKOOK\n主辦：@kookmin_fun_taiwan\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665968, "lng": 120.302867, "q": "高雄捷運 R14 巨蛋站", "links": [{"t": "公告", "u": "https://www.threads.com/share/FYlWibcrG"}, {"t": "主辦", "u": "https://www.threads.com/@kookmin_fun_taiwan"}], "dates": [], "start": "2026-11-13", "end": "2026-11-30"}, {"id": "f_Jin-kh-bii", "c": "fan", "t": "燈箱/看板", "mem": "JIN", "n": "碩珍世運捷運站看板", "sd": "燈箱/看板｜11/15-12/14", "d": "📍 高雄捷運世運站（世運）\n⏰ 11/15-12/14\n💡 捷運世運站近3號出口\n成員：JIN\n主辦：@jieling_jin、@linlili1129\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701485, "lng": 120.302399, "q": "高雄捷運世運站", "links": [{"t": "公告", "u": "https://www.threads.com/share/BBLqciumW3"}, {"t": "主辦", "u": "https://www.threads.com/@jieling_jin"}], "dates": [], "start": "2026-11-15", "end": "2026-12-14"}, {"id": "f_RM-KH-BII", "c": "fan", "t": "燈箱/看板", "mem": "RM", "n": "南俊明華富國路口看板", "sd": "燈箱/看板｜11/7-11/23", "d": "📍 左營區明華一路199號（巨蛋）\n⏰ 11/7-11/23\n成員：RM\n主辦：@whalien875\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.663018, "lng": 120.306362, "q": "左營區明華一路199號", "links": [{"t": "公告", "u": "https://www.threads.com/share/BpOEyTTW_K"}, {"t": "主辦", "u": "https://www.threads.com/@whalien875"}], "dates": [], "start": "2026-11-07", "end": "2026-11-23"}, {"id": "f_SG-kh-bii", "c": "fan", "t": "燈箱/看板", "mem": "SUGA", "n": "SUGA 世運捷運看板", "sd": "燈箱/看板｜11/1-11/30", "d": "📍 高雄捷運世運站（世運）\n⏰ 11/1-11/30\n💡 捷運世運站近1、2號站內電梯\n成員：SUGA\n主辦：@tae_hyung0613\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701385, "lng": 120.302599, "q": "高雄捷運世運站", "links": [{"t": "公告", "u": "https://www.threads.com/share/BATZ7F4xsZ/"}, {"t": "主辦", "u": "https://www.threads.com/@tae_hyung0613"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_V-KH-BII1", "c": "fan", "t": "燈箱/看板", "mem": "V", "n": "泰吧世運站看板", "sd": "燈箱/看板｜11/1-11/30", "d": "📍 高雄捷運世運站（世運）\n⏰ 11/1-11/30\n💡 捷運世運站近1號出口\n成員：V\n主辦：@金泰亨V_TAE8\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701285, "lng": 120.302499, "q": "高雄捷運世運站", "links": [{"t": "公告", "u": "https://weibo.com/3657753190/5365245284454398"}, {"t": "主辦", "u": "https://weibo.com/u/3657753190"}], "dates": [], "start": "2026-11-01", "end": "2026-11-30"}, {"id": "f_V-KH-BII2", "c": "fan", "t": "燈箱/看板", "mem": "V", "n": "泰亨明華富國路口看板", "sd": "燈箱/看板｜11/7-11/23", "d": "📍 左營區明華一路199號（巨蛋）\n⏰ 11/7-11/23\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.663118, "lng": 120.306462, "q": "左營區明華一路199號", "links": [{"t": "公告", "u": "https://www.threads.com/share/Gm07T5-5P"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-07", "end": "2026-11-23"}, {"id": "f_V-KH-BII3", "c": "fan", "t": "燈箱/看板", "mem": "V", "n": "應援咖啡廳外牆看板（GOLDEN VIBE）", "sd": "燈箱/看板｜11/5-11/22", "d": "📍 GOLDEN VIBE 甜甜圈 · 咖啡 · 啤酒（巨蛋）\n⏰ 11/5-11/22\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.663, "lng": 120.3035, "q": "高雄 GOLDEN VIBE 甜甜圈 · 咖啡 · 啤酒", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-05", "end": "2026-11-22"}, {"id": "f_V-KH-BII4", "c": "fan", "t": "燈箱/看板", "mem": "V", "n": "瑞豐夜市看板", "sd": "燈箱/看板｜11/16-11/30，24 小時", "d": "📍 鼓山區裕誠路1065號（巨蛋）\n⏰ 11/16-11/30，24 小時\n💡 三民家商斜對面\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665913, "lng": 120.301042, "q": "鼓山區裕誠路1065號", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-16", "end": "2026-11-30"}, {"id": "f_V-KH-BII5", "c": "fan", "t": "燈箱/看板", "mem": "V", "n": "V 世運捷運燈箱", "sd": "燈箱/看板｜11/9-11/22", "d": "📍 高雄世運捷運站（世運）\n⏰ 11/9-11/22\n💡 捷運世運站2號出口\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.701185, "lng": 120.302399, "q": "高雄世運捷運站", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-09", "end": "2026-11-22"}, {"id": "f_JV-KH-FOOD", "c": "fan", "t": "餐車", "mem": "V、JUNGKOOK", "n": "泰亨柾國應援餐車", "sd": "餐車｜依照主辦公告", "d": "📍 COMPOSE（高雄篤敬店）斜對面（巨蛋）\n⏰ 依照主辦公告\n💡 11/20（五）13:00–16:00 160 份｜11/21（六）12:00–15:00 200 份｜11/22（日）12:00–15:00 200 份\n成員：V、JUNGKOOK\n主辦：@v.k_snow\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/20・11/21・11/22", "lat": 22.664618, "lng": 120.302511, "q": "COMPOSE（高雄篤敬店）斜對面", "links": [{"t": "公告", "u": "https://www.threads.com/share/EFjipRh2t"}, {"t": "主辦", "u": "https://www.threads.com/@v.k_snow"}], "dates": ["11/20", "11/21", "11/22"], "start": "2026-11-20", "end": "2026-11-22"}, {"id": "f_bts-cafe-luxe", "c": "fan", "t": "應援咖啡廳", "mem": "BTS", "n": "BTS 應援咖啡廳", "sd": "應援咖啡廳｜11/19–11/22 10:00–19:30", "d": "📍 魯克思咖啡（左營區修明街166號）（凹子底）\n⏰ 11/19–11/22 10:00–19:30\n🏷 已開放預約\n成員：BTS\n主辦：@dai_an_23、@anya_shhhee\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.6603, "lng": 120.304, "q": "高雄 魯克思咖啡（左營區修明街166號）", "links": [{"t": "公告", "u": "https://www.threads.com/share/P0ghJE2r6/"}, {"t": "主辦", "u": "https://www.threads.com/@dai_an_23"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_jm-cafe", "c": "fan", "t": "應援咖啡廳", "mem": "JIMIN", "n": "JIMIN 應援咖啡廳", "sd": "應援咖啡廳｜11/19–11/22", "d": "📍 沐沐茶飲專賣店（楠梓區宏毅一路6號）（世運）\n⏰ 11/19–11/22\n💡 不用預約，營業時間內直接去\n成員：JIMIN\n主辦：@ethereal__jimin\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.7036, "lng": 120.3013, "q": "沐沐茶飲專賣店（楠梓區宏毅一路6號）", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAQ9LEk8j2/"}, {"t": "主辦", "u": "https://www.threads.com/@ethereal__jimin"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_SG-KH-CAFE", "c": "fan", "t": "應援咖啡廳", "mem": "SUGA", "n": "SUGA CAFE EVENT × 迷你展示會", "sd": "應援咖啡廳｜11/19-11/22", "d": "📍 Ballon J Cafe（駁二）\n⏰ 11/19-11/22\n成員：SUGA\n主辦：@minstery_0309\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.617468, "lng": 120.293961, "q": "高雄 Ballon J Cafe", "links": [{"t": "公告", "u": "https://www.threads.com/share/F6R16FxG8"}, {"t": "主辦", "u": "https://www.threads.com/@minstery_0309"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_tae-cafe1", "c": "fan", "t": "應援咖啡廳", "mem": "V", "n": "FOR US 金泰亨應援咖啡廳", "sd": "應援咖啡廳｜11/19-11/20 10:00-20:00；11/21-11/22 10:00-18:00", "d": "📍 MISS MIMI COFFEE（左營區新勝街21號）（巨蛋）\n⏰ 11/19-11/20 10:00-20:00；11/21-11/22 10:00-18:00\n🏷 已開放預約\n成員：V\n主辦：@forus.tae\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.6691, "lng": 120.2998, "q": "高雄 MISS MIMI COFFEE（左營區新勝街21號）", "links": [{"t": "公告", "u": "https://www.threads.com/share/HvwPc8SH6/"}, {"t": "主辦", "u": "https://www.threads.com/@forus.tae"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_tae-cafe2", "c": "fan", "t": "應援咖啡廳", "mem": "V", "n": "金泰亨應援咖啡廳", "sd": "應援咖啡廳｜11/19–11/22", "d": "📍 GOLDEN VIBE 甜甜圈 · 咖啡 · 啤酒（博愛二路312號）（巨蛋）\n⏰ 11/19–11/22\n🏷 已開放預約\n成員：V\n主辦：@maya1230taetae\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.6629, "lng": 120.3034, "q": "GOLDEN VIBE 甜甜圈 · 咖啡 · 啤酒（博愛二路312號）", "links": [{"t": "公告", "u": "https://www.threads.com/share/Hw-jG0FDk"}, {"t": "主辦", "u": "https://www.threads.com/@maya1230taetae"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_BTS-kh-led", "c": "fan", "t": "LED電視牆", "mem": "BTS", "n": "Fan Chant 跑馬燈", "sd": "LED電視牆｜11/5-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/5-11/23\n💡 24 小時輪播\n成員：BTS\n主辦：@whalien875\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688248, "lng": 120.309259, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/FNDQhIE4O"}, {"t": "主辦", "u": "https://www.threads.com/@whalien875"}], "dates": [], "start": "2026-11-05", "end": "2026-11-23"}, {"id": "f_BTS-kh-led2", "c": "fan", "t": "LED電視牆", "mem": "BTS", "n": "彩虹市集電視牆（BTS）", "sd": "LED電視牆｜11/8-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/8-11/23\n💡 24 小時輪播\n成員：BTS\n主辦：@whalien875\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688148, "lng": 120.309359, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/_eIW8d2I6"}, {"t": "主辦", "u": "https://www.threads.com/@whalien875"}], "dates": [], "start": "2026-11-08", "end": "2026-11-23"}, {"id": "f_JH-tv-kh1", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "六合夜市電視牆（J-HOPE）", "sd": "LED電視牆｜11/18-11/22", "d": "📍 六合夜市（美麗島）\n⏰ 11/18-11/22\n💡 美麗島10號出口\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.633795, "lng": 120.298772, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/EHLsbI7aH/"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-18", "end": "2026-11-22"}, {"id": "f_JH-tv-kh2", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "聯上大飯店電視牆（J-HOPE）", "sd": "LED電視牆｜11/17-11/23", "d": "📍 聯上大飯店外（巨蛋）\n⏰ 11/17-11/23\n💡 聯上大飯店外\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666073, "lng": 120.303657, "q": "高雄 聯上大飯店外", "links": [{"t": "公告", "u": "https://www.threads.com/share/GsNDeFv6U"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-17", "end": "2026-11-23"}, {"id": "f_JH-tv-kh3", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "自由大順路口應援影片（J-HOPE）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 永慶大順自由加盟店上方（凹子底）\n⏰ 11/16-11/22\n💡 永慶大順自由加盟店上方電視牆\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.657064, "lng": 120.308582, "q": "高雄 永慶大順自由加盟店上方", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAbdjd9P5-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh4", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "彩虹市集電視牆（J-HOPE）", "sd": "LED電視牆｜11/11-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/11-11/23\n💡 24 小時輪播\n成員：J-HOPE\n主辦：@jenlion7\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688048, "lng": 120.309159, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/_lo299yyI"}, {"t": "主辦", "u": "https://www.threads.com/@jenlion7"}], "dates": [], "start": "2026-11-11", "end": "2026-11-23"}, {"id": "f_JH-tv-kh5", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・博愛三路／新莊一路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 博愛三路／新莊一路口（巨蛋）\n⏰ 11/16-11/22\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.670519, "lng": 120.303394, "q": "博愛三路／新莊一路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh6", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・中華路／青峰路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 中華路／青峰路口（7-Eleven 上方）（其他）\n⏰ 11/16-11/22\n💡 7-Eleven 上方（位置請用 Google 地圖搜尋）\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": null, "lng": null, "q": "中華路／青峰路口（7-Eleven 上方）", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh7", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・藍昌路／德民路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 藍昌路／德民路口（楠梓）\n⏰ 11/16-11/22\n💡 楠梓加工區\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.721834, "lng": 120.291061, "q": "藍昌路／德民路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh8", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・民族一路／九如路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 民族一路／九如路口（高雄車站）\n⏰ 11/16-11/22\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.640267, "lng": 120.314309, "q": "民族一路／九如路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh9", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・建國路／青年路口（鳳山）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 建國路／青年路口（鳳山）\n⏰ 11/16-11/22\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.637213, "lng": 120.350747, "q": "建國路／青年路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh10", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・三多二路／光華路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 三多二路／光華路口（三多）\n⏰ 11/16-11/22\n💡 光華夜市\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.618398, "lng": 120.317861, "q": "三多二路／光華路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh11", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・裕誠路／南屏路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 裕誠路／南屏路口（巨蛋）\n⏰ 11/16-11/22\n💡 瑞豐夜市正入口\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666349, "lng": 120.299574, "q": "裕誠路／南屏路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh12", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・大順三路／建國路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 大順三路／建國路口（苓雅）\n⏰ 11/16-11/22\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.632945, "lng": 120.325946, "q": "大順三路／建國路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_JH-tv-kh13", "c": "fan", "t": "LED電視牆", "mem": "J-HOPE", "n": "J-HOPE 九座電視牆・中山二路／興中二路口", "sd": "LED電視牆｜11/16-11/22", "d": "📍 中山二路／興中二路口（三多）\n⏰ 11/16-11/22\n💡 離昭來商旅很近\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.615404, "lng": 120.303842, "q": "中山二路／興中二路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/ECVeWHqO-"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_jm-ledtv", "c": "fan", "t": "LED電視牆", "mem": "JIMIN", "n": "彩虹市集電視牆（JIMIN）", "sd": "LED電視牆｜11/12-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/12-11/23\n💡 24 小時輪播\n成員：JIMIN\n主辦：@magicmushroom606\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688548, "lng": 120.309059, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/F7Gx2eEWy"}, {"t": "主辦", "u": "https://www.threads.com/@magicmushroom606"}], "dates": [], "start": "2026-11-12", "end": "2026-11-23"}, {"id": "f_Jin-ledtv1", "c": "fan", "t": "LED電視牆", "mem": "JIN", "n": "聯上大飯店外電視牆（JIN）", "sd": "LED電視牆｜11/13-11/23", "d": "📍 聯上大飯店外（巨蛋）\n⏰ 11/13-11/23\n💡 聯上大飯店外\n成員：JIN\n主辦：@mysweetmoon_jin\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666173, "lng": 120.303557, "q": "高雄 聯上大飯店外", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAXs0h7yQD"}, {"t": "主辦", "u": "https://www.threads.com/@mysweetmoon_jin"}], "dates": [], "start": "2026-11-13", "end": "2026-11-23"}, {"id": "f_Jin-ledtv2", "c": "fan", "t": "LED電視牆", "mem": "JIN", "n": "聯上大飯店外、漢神巨蛋外候車亭廣告（JIN）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 聯上大飯店外、漢神巨蛋外候車亭（巨蛋）\n⏰ 11/16-11/22\n💡 聯上大飯店外、漢神巨蛋外候車亭\n成員：JIN\n主辦：@vanilla.jl\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666227, "lng": 120.303772, "q": "高雄 聯上大飯店外、漢神巨蛋外候車亭", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAVQGaEV1s"}, {"t": "主辦", "u": "https://www.threads.com/@vanilla.jl"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_Jin-ledtv3", "c": "fan", "t": "LED電視牆", "mem": "JIN", "n": "六合夜市電視牆（JIN）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 六合夜市（美麗島）\n⏰ 11/16-11/22\n💡 美麗島10號出口\n成員：JIN\n主辦：@jkwfsa.613、@love7jin\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.633895, "lng": 120.298672, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/EHSRYDNzL"}, {"t": "主辦", "u": "https://www.threads.com/@jkwfsa.613"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_Jin-ledtv4", "c": "fan", "t": "LED電視牆", "mem": "JIN", "n": "JIN 高雄應援廣告（漢神巨蛋、博愛裕誠路口）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 漢神巨蛋、博愛裕誠路口（巨蛋）\n⏰ 11/16-11/22\n💡 漢神巨蛋百貨廣場 09:00－22:00、博愛裕誠路口 07:00－24:00\n成員：JIN\n主辦：@vanilla.jl\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666027, "lng": 120.303572, "q": "漢神巨蛋、博愛裕誠路口", "links": [{"t": "公告", "u": "https://www.threads.com/share/NIZ0zC3rn"}, {"t": "主辦", "u": "https://www.threads.com/@vanilla.jl"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_jk-ledtv", "c": "fan", "t": "LED電視牆", "mem": "Jungkook", "n": "六合夜市大電視牆（JUNGKOOK）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 六合夜市（美麗島）\n⏰ 11/16-11/22\n💡 美麗島10號出口\n成員：Jungkook\n主辦：@jkwfsa.613\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.633695, "lng": 120.298872, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/F4vGL6FgZ"}, {"t": "主辦", "u": "https://www.threads.com/@jkwfsa.613"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_RM-ledtv", "c": "fan", "t": "LED電視牆", "mem": "RM", "n": "六合夜市電視牆（RM）", "sd": "LED電視牆｜11/19-11/22", "d": "📍 六合夜市（美麗島）\n⏰ 11/19-11/22\n💡 美麗島10號出口\n成員：RM\n主辦：@behindtone6.0\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.633995, "lng": 120.298572, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@behindtone6.0"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_SG-KH-LED4", "c": "fan", "t": "LED電視牆", "mem": "SUGA", "n": "六合夜市電視牆（SUGA）", "sd": "LED電視牆｜11/16-11/22", "d": "📍 六合夜市（美麗島）\n⏰ 11/16-11/22\n💡 美麗島10號出口\n成員：SUGA\n主辦：@qq.cho\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.633595, "lng": 120.298972, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/GbFoCoZpe"}, {"t": "主辦", "u": "https://www.threads.com/@qq.cho"}], "dates": [], "start": "2026-11-16", "end": "2026-11-22"}, {"id": "f_SG-KH-LED1", "c": "fan", "t": "LED電視牆", "mem": "SUGA", "n": "SUGA 巨星魅力（夢時代戶外螢幕）", "sd": "LED電視牆｜11/5-11/23", "d": "📍 高雄夢時代戶外大螢幕（夢時代）\n⏰ 11/5-11/23\n💡 百貨營業時間，每小時輪播六次，每次 15 秒\n成員：SUGA\n主辦：@joycejang66\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.595324, "lng": 120.305515, "q": "高雄夢時代戶外大螢幕", "links": [{"t": "公告", "u": "https://www.threads.com/share/BmYipywH5-"}], "dates": [], "start": "2026-11-05", "end": "2026-11-23"}, {"id": "f_SG-KH-LED2", "c": "fan", "t": "LED電視牆", "mem": "SUGA", "n": "SUGA 盛世美顏（夢時代 B1）", "sd": "LED電視牆｜11/5-11/23", "d": "📍 高雄夢時代 B1 美食街（夢時代）\n⏰ 11/5-11/23\n💡 百貨營業時間，每小時輪播六次，每次 15 秒\n成員：SUGA\n主辦：@joycejang66\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.594924, "lng": 120.305915, "q": "高雄夢時代 B1 美食街", "links": [{"t": "公告", "u": "https://www.threads.com/share/FOePzqNGT"}, {"t": "主辦", "u": "https://www.threads.com/@joycejang66"}], "dates": [], "start": "2026-11-05", "end": "2026-11-23"}, {"id": "f_SG-KH-LED3", "c": "fan", "t": "LED電視牆", "mem": "SUGA", "n": "彩虹市集電視牆（SUGA）", "sd": "LED電視牆｜11/9-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/9-11/23\n💡 24 小時輪播\n成員：SUGA\n主辦：@tamiluvyoongi\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688648, "lng": 120.309359, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/GeMUNm2yY"}, {"t": "主辦", "u": "https://www.threads.com/@tamiduoduo"}], "dates": [], "start": "2026-11-09", "end": "2026-11-23"}, {"id": "f_V-tv-kh6", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "六合夜市電視牆（V・泰吧）", "sd": "LED電視牆｜11/18-11/24", "d": "📍 六合夜市（美麗島）\n⏰ 11/18-11/24\n💡 美麗島10號出口\n成員：V\n主辦：@金泰亨V_TAE8\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.634095, "lng": 120.298772, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://weibo.com/3657753190/5365245284454398"}, {"t": "主辦", "u": "https://weibo.com/u/3657753190"}], "dates": [], "start": "2026-11-18", "end": "2026-11-24"}, {"id": "f_V-tv-kh7", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "聯上大飯店電視牆（V・泰吧）", "sd": "LED電視牆｜11/18-11/24", "d": "📍 聯上大飯店外（巨蛋）\n⏰ 11/18-11/24\n💡 聯上大飯店外\n成員：V\n主辦：@金泰亨V_TAE8\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.665973, "lng": 120.303757, "q": "高雄 聯上大飯店外", "links": [{"t": "公告", "u": "https://weibo.com/3657753190/5365245284454398"}, {"t": "主辦", "u": "https://weibo.com/u/3657753190"}], "dates": [], "start": "2026-11-18", "end": "2026-11-24"}, {"id": "f_V-tv-kh1", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "巨蛋 LED 電視牆（V）", "sd": "LED電視牆｜11/9-11/23", "d": "📍 聯上大飯店外（巨蛋）\n⏰ 11/9-11/23\n💡 聯上大飯店外\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666273, "lng": 120.303857, "q": "高雄 聯上大飯店外", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-09", "end": "2026-11-23"}, {"id": "f_V-tv-kh2", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "六合夜市電視牆（V）", "sd": "LED電視牆｜11/16-11/23", "d": "📍 六合夜市（美麗島）\n⏰ 11/16-11/23\n💡 美麗島10號出口\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.633495, "lng": 120.298672, "q": "高雄 六合夜市", "links": [{"t": "公告", "u": "https://www.threads.com/share/D9TGsYF79/"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-15", "end": "2026-11-23"}, {"id": "f_V-tv-kh3", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "彩虹市集電視牆（V）", "sd": "LED電視牆｜11/8-11/23", "d": "📍 高雄左營新光三越・彩虹市集 B1（左營）\n⏰ 11/8-11/23\n💡 24 小時輪播\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.688748, "lng": 120.309159, "q": "高雄左營新光三越・彩虹市集 B1", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAbUSfY1ub"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-08", "end": "2026-11-23"}, {"id": "f_V-tv-kh4", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "巨蛋候車亭電視牆（V）", "sd": "LED電視牆｜11/15-11/22", "d": "📍 漢神巨蛋旁博愛二路上（巨蛋）\n⏰ 11/15-11/22\n💡 捷運巨蛋站5號出口\n成員：V\n主辦：@armycctw2922\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.666866, "lng": 120.303208, "q": "漢神巨蛋旁博愛二路上", "links": [{"t": "公告", "u": "https://www.threads.com/share/EKwdlVtTk"}, {"t": "主辦", "u": "https://www.threads.com/@armycctw2922"}], "dates": [], "start": "2026-11-15", "end": "2026-11-22"}, {"id": "f_V-tv-kh5", "c": "fan", "t": "LED電視牆", "mem": "V", "n": "夢時代水池廣場可口可樂廣告（V）", "sd": "LED電視牆｜11/12-11/24", "d": "📍 高雄夢時代戶外大螢幕（夢時代）\n⏰ 11/12-11/24\n成員：V\n主辦：@unidreammall\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.595024, "lng": 120.30584, "q": "高雄夢時代戶外大螢幕", "links": [{"t": "公告", "u": "https://www.instagram.com/reel/Dfon8ECxDbu/"}, {"t": "主辦", "u": "https://www.instagram.com/unidreammall"}], "dates": [], "start": "2026-11-12", "end": "2026-11-24"}, {"id": "f_JH-KH-CAR", "c": "fan", "t": "LED廣告車", "mem": "J-HOPE", "n": "J-HOPE 場周應援卡車", "sd": "LED廣告車｜11/19、11/21、11/22", "d": "📍 世運場館周圍（世運）\n⏰ 11/19、11/21、11/22\n💡 軍校路、海功路、左楠路、後昌路附近繞行\n成員：J-HOPE\n主辦：@0218_kellyhung_\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.713192, "lng": 120.291324, "q": "高雄 世運場館周圍", "links": [{"t": "公告", "u": "https://www.threads.com/share/EHLsbI7aH/"}, {"t": "主辦", "u": "https://www.threads.com/@0218_kellyhung_"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_jm-led-truck", "c": "fan", "t": "LED廣告車", "mem": "JIMIN", "n": "JIMIN LED 廣告車", "sd": "LED廣告車｜11/19、11/21、11/22 10:30–19:30（依巡迴時段）", "d": "📍 高雄市區巡迴（世運、巨蛋、凹子底）\n⏰ 11/19、11/21、11/22 10:30–19:30（依巡迴時段）\n💡 停靠義享天地（快閃店）、漢神巨蛋，最後在演唱會場地繞行\n成員：JIMIN\n主辦：@chang_sasha\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19・11/20・11/21・11/22", "lat": 22.656981, "lng": 120.303299, "q": "高雄市區巡迴", "links": [{"t": "公告", "u": "https://www.threads.com/share/D1qT3D_pj/"}, {"t": "主辦", "u": "https://www.threads.com/@chang_sasha"}], "dates": ["11/19", "11/20", "11/21", "11/22"], "start": "2026-11-19", "end": "2026-11-22"}, {"id": "f_jm-led-truck2", "c": "fan", "t": "LED廣告車", "mem": "JIMIN", "n": "LED TRUCK FOR JIMIN", "sd": "LED廣告車｜11/21 11:00-18:00", "d": "📍 義享天地、高雄國家體育場（世運、凹子底）\n⏰ 11/21 11:00-18:00\n成員：JIMIN\n主辦：@destinyof23\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/21", "lat": 22.656747, "lng": 120.306472, "q": "義享天地、高雄國家體育場", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAX0UCKCwG"}, {"t": "主辦", "u": "https://www.threads.com/@destinyof23"}], "dates": ["11/21"], "start": "2026-11-21", "end": "2026-11-21"}, {"id": "f_JINJK-LEDCAR", "c": "fan", "t": "LED廣告車", "mem": "JIN、JUNGKOOK", "n": "世運 LED 應援車（碩珍 & 柾國）", "sd": "LED廣告車｜11/19 10:00-18:00", "d": "📍 世運場館周圍（世運）\n⏰ 11/19 10:00-18:00\n成員：JIN、JUNGKOOK\n主辦：@jkwfsa.613\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19", "lat": 22.7, "lng": 120.299, "q": "高雄 世運場館周圍", "links": [{"t": "公告", "u": "https://www.threads.com/share/GLKd7kfcA"}, {"t": "主辦", "u": "https://www.threads.com/@jkwfsa.613"}], "dates": ["11/19"], "start": "2026-11-19", "end": "2026-11-19"}, {"id": "f_SG-KH-LEDCAR", "c": "fan", "t": "LED廣告車", "mem": "SUGA", "n": "SUGA LED 應援廣告車", "sd": "LED廣告車｜11/19 10:00-20:00", "d": "📍 世運場館周圍（世運）\n⏰ 11/19 10:00-20:00\n💡 繞行世運主場館周邊 10 小時\n成員：SUGA\n主辦：@first_love_.sg39\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19", "lat": 22.7005, "lng": 120.2995, "q": "高雄 世運場館周圍", "links": [{"t": "公告", "u": "https://www.threads.com/share/BAXZ6CyxIh/"}, {"t": "主辦", "u": "https://www.threads.com/@first_love.sg39"}], "dates": ["11/19"], "start": "2026-11-19", "end": "2026-11-19"}, {"id": "f_V-ledcar", "c": "fan", "t": "LED廣告車", "mem": "V", "n": "泰吧 17 噸應援車", "sd": "LED廣告車｜11/21-11/22", "d": "📍 義享時尚廣場、漢神巨蛋、世運（世運、凹子底、巨蛋）\n⏰ 11/21-11/22\n成員：V\n主辦：@金泰亨V_TAE8\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/21・11/22", "lat": 22.656547, "lng": 120.306272, "q": "高雄 義享時尚廣場、漢神巨蛋、世運", "links": [{"t": "公告", "u": "https://weibo.com/3657753190/5365245284454398"}, {"t": "主辦", "u": "https://weibo.com/u/3657753190"}], "dates": ["11/21", "11/22"], "start": "2026-11-21", "end": "2026-11-22"}, {"id": "f_BTS-CITY4", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "義享時尚廣場 戶外 LED／巨幅壁貼", "sd": "城市應援｜11/1-11/22", "d": "📍 E SKY MALL（義享天地）（凹子底）\n⏰ 11/1-11/22\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.656867, "lng": 120.30614, "q": "高雄 E SKY MALL（義享天地）", "links": [], "dates": [], "start": "2026-11-01", "end": "2026-11-22"}, {"id": "f_BTS-CITY7", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "郡都集團總部紫燈", "sd": "城市應援｜11/7-11/22", "d": "📍 郡都集團總部（凹子底）\n⏰ 11/7-11/22\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.66388, "lng": 120.297711, "q": "高雄 郡都集團總部", "links": [], "dates": [], "start": "2026-11-07", "end": "2026-11-22"}, {"id": "f_BTS-CITY16", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "鰲躍龍翔（愛河親水公園）紫燈", "sd": "城市應援｜11/12-11/22", "d": "📍 愛河親水公園（愛河）\n⏰ 11/12-11/22\n💡 2001 年台灣燈會主燈\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.623809, "lng": 120.290343, "q": "高雄 愛河親水公園", "links": [], "dates": [], "start": "2026-11-12", "end": "2026-11-22"}, {"id": "f_BTS-CITY18", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "BTS 主題行人號誌燈（多處）", "sd": "城市應援｜11/12-11/22", "d": "📍 高雄市區多處路口（駁二）\n⏰ 11/12-11/22\n💡 世運大道附近／中央公園／中山一路・五福二路口／五福二路・玉竹三街口（新崛江）／駁二、大勇路・公園二路口\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.621393, "lng": 120.283411, "q": "高雄市區多處路口", "links": [], "dates": [], "start": "2026-11-12", "end": "2026-11-22"}, {"id": "f_BTS-CITY19", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "新高埕街舞區紫燈", "sd": "城市應援｜11/11-11/22", "d": "📍 新高埕街舞區（高雄車站）\n⏰ 11/11-11/22\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.639731, "lng": 120.302662, "q": "高雄 新高埕街舞區", "links": [], "dates": [], "start": "2026-11-11", "end": "2026-11-22"}, {"id": "f_BTS-CITY20", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "春秋閣 五里亭點紫燈", "sd": "城市應援｜11/14-11/22", "d": "📍 蓮池潭 春秋閣 五里亭（左營）\n⏰ 11/14-11/22\n💡 在蓮池潭，可以跟龍虎塔一起拍（圖上為示意）\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.6838, "lng": 120.2938, "q": "高雄 蓮池潭 春秋閣 五里亭", "links": [], "dates": [], "start": "2026-11-14", "end": "2026-11-22"}, {"id": "f_BTS-CITY21", "c": "fan", "t": "城市應援", "mem": "BTS", "n": "錦禾堂 × BTS", "sd": "城市應援｜11/14-11/22", "d": "📍 錦禾堂（三民）\n⏰ 11/14-11/22\n成員：BTS\n（資料來源：BTSSUPPORT 應援地圖）", "w": "整段期間", "lat": 22.643569, "lng": 120.334265, "q": "高雄 錦禾堂", "links": [], "dates": [], "start": "2026-11-14", "end": "2026-11-22"}, {"id": "f_fan-banner-1119", "c": "fan", "t": "應援企劃", "mem": "BTS", "n": "場內手幅（11/19）", "sd": "應援企劃｜11/19", "d": "📍 高雄國家體育場（場內）（世運）\n⏰ 11/19\n💡 指定歌曲響起時，全場同步高舉手幅\n成員：BTS\n主辦：@bts_tw_base\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/19", "lat": 22.703508, "lng": 120.294365, "q": "高雄國家體育場（場內）", "links": [{"t": "公告", "u": "https://www.threads.com/share/GXvDHqrLi/"}, {"t": "主辦", "u": "https://www.threads.com/@bts_tw_base"}], "dates": ["11/19"], "start": "2026-11-19", "end": "2026-11-19"}, {"id": "f_fan-banner-1121", "c": "fan", "t": "應援企劃", "mem": "BTS", "n": "場內手幅（11/21）", "sd": "應援企劃｜11/21", "d": "📍 高雄國家體育場（場內）（世運）\n⏰ 11/21\n💡 成員坐在旋轉舞台上說話時，全場同步舉起手幅\n成員：BTS\n主辦：@bts_tw_base\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/21", "lat": 22.703308, "lng": 120.294565, "q": "高雄國家體育場（場內）", "links": [{"t": "公告", "u": "https://www.threads.com/share/HcQCal4BS/"}, {"t": "主辦", "u": "https://www.threads.com/@bts_tw_base"}], "dates": ["11/21"], "start": "2026-11-21", "end": "2026-11-21"}, {"id": "f_fan-banner-1122", "c": "fan", "t": "應援企劃", "mem": "BTS", "n": "場內手幅（11/22）", "sd": "應援企劃｜11/22", "d": "📍 高雄國家體育場（場內）（世運）\n⏰ 11/22\n💡 成員坐在旋轉舞台上說話時，全場同步舉起手幅\n成員：BTS\n主辦：@bts_tw_base\n（資料來源：BTSSUPPORT 應援地圖）", "w": "11/22", "lat": 22.703408, "lng": 120.294465, "q": "高雄國家體育場（場內）", "links": [{"t": "公告", "u": "https://www.threads.com/share/GgxCIAdFZ/"}, {"t": "主辦", "u": "https://www.threads.com/@bts_tw_base"}], "dates": ["11/22"], "start": "2026-11-22", "end": "2026-11-22"}];
+P.push(...FANP);
+// ---- 紫燈應援（banbi217 整理）＋ 紅綠燈 ----
+const L_PURPLE={t:'紫燈整理 IG',u:'https://www.instagram.com/reel/Dfr3ze_BNw3/?rpxt=aHFmYXJmcjRudDdq'};
+const L_LIGHT={t:'紅綠燈 IG',u:'https://www.instagram.com/reel/DfpaFAxxWI9/?psln=MWYzM3dwNTl2MHFsdQ=='};
+const PURPLE_HRS='紫燈：每天 17:30–23:00，到 11/22';
+const UPD={
+ lotus:'怎麼去：捷運左營站（R16）、高鐵左營站或捷運生態園區站（R15）搭紅 35 公車到蓮池潭（勝利路）下車；台鐵左營站走路約 11 分鐘，也可騎 YouBike。',
+ kpmc:'拍照點：音浪塔（輕軌真愛碼頭站 C11）。紫色聖誕樹在礁群、鯨群堤岸（輕軌光榮碼頭站 C10）。',
+ '85':'輕軌高雄展覽館站（C8）。',
+ dream:'輕軌凱旋中華站（C4）或夢時代站（C5）。每 15 分鐘輪播一次防彈點燈。拍攝位置：地圖搜尋「前鎮炒飯」。',
+ h2o:'',
+ pier:'高雄港旅運中心也是紫燈點之一（每天 17:30–23:00，到 11/22）。',
+ cpark_deco:'捷運中央公園站（R9）。'
+};
+const LL={'85':[22.611924,120.300100],kpmc:[22.618394,120.288623],dream:[22.595124,120.305715],h2o:[22.663175,120.302104],lotus:[22.680705,120.292547],hanshin:[22.6701,120.303],p_weiwu:[22.62292,120.342492],p_talee:[22.621965,120.298227],cpark_deco:[22.624846,120.301125],p_cityhotel:[22.619396,120.284534],p_yuzhu:[22.624363,120.301807],p_csc:[22.605235,120.302005],p_station:[22.639374,120.302594],p_loveriver:[22.623809,120.290343],pier:[22.611271,120.293306],p_nanhua:[22.631375,120.302865],p_lianshang:[22.666073,120.303657]};
+Object.entries(LL).forEach(([id,[la,lo]])=>{const p=P.find(x=>x.id===id);if(p){p.lat=la;p.lng=lo;}});
+Object.entries(UPD).forEach(([id,extra])=>{const p=P.find(x=>x.id===id);if(!p)return;
+ if(p.c==='cheer'){p.d=p.d+(extra?'\n'+extra:'')+'\n'+PURPLE_HRS;p.links=[...(p.links||[]),L_PURPLE];}
+ else if(extra){p.d=p.d+'\n'+extra;p.links=[...(p.links||[]),L_PURPLE];}});
+const pc=(id,n,sd,d,lat,lng,q,w)=>({id,c:'cheer',n,sd,d:d+'\n'+PURPLE_HRS,w:w||'晚上',lat,lng,q,links:[L_PURPLE]});
+P.push(
+ {id:'tl_yongping',c:'cheer',n:'BTS 紅綠燈・永平路／海邊路口',sd:'十字路口的紅綠燈換上 BTS 應援圖案',d:'永平路與海邊路十字路口的行人號誌換成 BTS 應援圖案，等綠燈時拍。\n位置在苓雅區海邊路上（圖上為示意，導航請用 Google 地圖）',w:'任何時間',lat:22.6176,lng:120.2958,q:'高雄 永平路 海邊路 路口',links:[L_LIGHT]},
+ {id:'tl_qingnian2',c:'cheer',n:'BTS 紅綠燈・海邊路／青年二路口',sd:'另一個 BTS 應援紅綠燈',d:'海邊路與青年二路交叉口的 BTS 紅綠燈。跟永平路口很近，可以一起拍。\n（圖上為示意）',w:'任何時間',lat:22.6198,lng:120.2962,q:'高雄 海邊路 青年二路 路口',links:[L_PURPLE,L_LIGHT]},
+ pc('p_bridge','大港橋紫燈','白色旋轉橋打紫光','輕軌駁二大義站（C12）。',22.6192,120.2794,'大港橋'),
+ pc('p_weiwu','衛武營紫燈','衛武營國家藝術文化中心點紫燈','捷運衛武營站（O10）6 號出口。',22.6252,120.3402,'衛武營國家藝術文化中心'),
+ pc('p_station','高雄車站紫燈','新車站的球體結構亮紫','拍照點：靠近九如二路那側的球體。',22.6394,120.3022,'高雄車站'),
+ pc('p_talee','大立百貨紫燈','捷運中央公園站 1 號出口走約 12 分鐘','捷運中央公園站（R9）1 號出口步行約 12 分鐘。',22.6226,120.2958,'大立百貨 高雄'),
+ pc('p_lianshang','聯上大飯店紫燈','巨蛋站 4 號出口，演唱會前後順路','捷運巨蛋站（R14）4 號出口。',22.6668,120.3048,'聯上大飯店 高雄'),
+ pc('p_library','高雄市立圖書館總館紫燈','亞洲新灣區，離 85 大樓不遠','亞洲新灣區，輕軌軟體園區站附近，可以跟 85 大樓、港旅運中心一起拍。',22.6110,120.3013,'高雄市立圖書館總館'),
+ pc('p_csc','中鋼大樓紫燈','亞洲新灣區地標亮紫','亞洲新灣區，可以跟 85 大樓、圖書館總館串在一起拍。',22.6068,120.3038,'中鋼集團總部大樓'),
+ pc('p_loveriver','愛河紫燈','愛河沿岸點紫燈','沿愛河散步拍夜景。',22.6262,120.2875,'愛河 高雄'),
+ pc('p_yuzhu','玉竹街紫燈','新興區玉竹商圈','新興區玉竹商圈。',22.6288,120.3062,'玉竹商圈 高雄'),
+ pc('p_nanhua','南華觀光商圈紫燈','新興區南華商圈，靠近六合夜市','新興區南華觀光商圈，離美麗島站、六合夜市很近。',22.6298,120.3006,'南華觀光商圈 高雄'),
+ pc('p_cityhotel','城市商旅真愛館紫燈','真愛碼頭旁','真愛碼頭旁，輕軌真愛碼頭站（C11）。',22.6188,120.2948,'城市商旅 真愛館 高雄')
+);
+const PM={};P.forEach(p=>PM[p.id]=p);
+const DAYS=[['2026-11-19','11/19','週四','THU','19'],['2026-11-20','11/20','週五','FRI','20'],['2026-11-21','11/21','週六','SAT','21'],['2026-11-22','11/22','週日','SUN','22']];
+const SHOWS=['2026-11-19','2026-11-21','2026-11-22'];
+const BASE={
+ '2026-11-19':[{s:'08:11',t:'08:11',x:'高鐵 809 次 台北 → 左營（10:25 到）・4 車 19D',p:'hsr',hsr:1},{s:'10:30',t:'10:25 後',x:'前往昭來商旅放行李',p:'hotel'},{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1}],
+ '2026-11-20':[{s:'18:10',t:'18:10',x:'ARIRANG 快閃店 @ 義享天地 1F',p:'popup'}],
+ '2026-11-21':[{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1}],
+ '2026-11-22':[{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1},{s:'23:00',t:'散場後',x:'B02 返鄉專車（回程）・散場後 45 分鐘內上車',bus:1}]
+};
+const VENUE=[
+ ['10:00 起','贊助商攤位 ARIH／VISA／SAMSUNG','ARIH 10:00–19:00；VISA 11:00–19:00（其餘依現場公告）'],
+ ['11:00–17:00','ARMY ZONE（粽卡）','高雄國家體育場 籃球場（場館西側、軍校路旁）｜ARMY MEMBERSHIP（GLOBAL）會員限定。必備：當日紙本票券＋Weverse App 的 Membership QR Code；每人每天限 1 次，只能用當天場次的票；可能提前結束'],
+ ['11:00 起','VIP 報到（到 Soundcheck 前）','VIP 報到處｜出示當日 VIP 套票＋本人證件，戴手環、蓋手章，票券蓋「已兌換」章；逾時未報到視同放棄'],
+ ['11:00 起','服務台・票務櫃檯開放（到演出開始）','現場不提供取票；遺失票券要在演出當天 18:00 前到票務櫃檯辦理'],
+ ['12:00 起','官方周邊現場販售開始（一般）','廣場主攤位／外區車道攤位｜不用出示票券。開放入場前 1 小時到開放入場，攤位可能暫停販售（看 Weverse 公告）'],
+ ['14:30–19:30','阿米棒配對服務台・場館內','1F 看台：C、D、E、F、G 門進場後（細節依現場公告）'],
+ ['14:30','VIP 開放入場（Pre-show BTS Soundcheck）','E、F、G 門、H 車道｜入場看實名制手章＋手環＋票券，任一樣毀損即失去入場資格'],
+ ['15:00–19:00','進場接駁公車','台鐵新左營站 → 世運主場館（單向）｜依實際現況調度'],
+ ['16:00','Pre-show BTS Soundcheck 開始（VIP）','高雄國家體育場'],
+ ['16:30','一般票開放入場','平面特區 A.R.M.Y：D、F、H 車道；一、二樓看台區・身障席：C、D、E、F、G 門｜實名制驗證＋安檢，請輕便入場；重複進出要再驗票、再安檢',1],
+ ['16:30 起','官方周邊場館內攤位開賣（到演出開始）','場內攤位（Indoor Booth）'],
+ ['演出日','場內酒水販賣區（到演出結束）',''],
+ ['入場時','領應援手幅（紫米番薯應援站）','看台區：小幫手在公告入口的入場安檢處隨隊發放（備好當日門票）；搖滾區非 VIP：座位上已放好；VIP：Soundcheck 結束後場內發放。小幫手綁紫色飄帶，沒拿到可找場內巡邏小幫手。粉絲應援、非官方'],
+ ['19:00','演出開始','高雄國家體育場',1],
+ ['演出中','Come Over：手機燈＋「We\'ll always be here」手幅（11/19 場）','阿米 TIME 結束後打開手機手電筒，亮到歌曲結束；手幅在歌曲進行中或接近結束時舉起，成員開始講話時繼續舉著，下一首歌前放下（舉在胸前，不要高舉過頭）'],
+ ['演出中','隨機歌曲後：舉「哇愛哩」手幅（11/21 場）','成員在旋轉舞台輪流講話時舉在胸前'],
+ ['演出中','Come Over：紫色燈海（11/21 場）','入座後把手幅夾鏈袋裡的紫色光膜（貼紙）貼在手機手電筒上；阿米 TIME 結束後打開手電筒（細節看應援公告）'],
+ ['演出中','隨機歌曲後：舉「KEEP SWIMMING」手幅（11/22 場）','細節看應援公告'],
+ ['21:30–23:30','散場接駁公車','世運主場館 → 台鐵新左營站（單向）｜依實際現況調度。捷運時刻請查高雄捷運官網'],
+ ['建議','至少提早 3 小時到場館附近','買周邊、ARMY ZONE（11:00–17:00）、領手幅、上廁所、排安檢都要時間']
+];
+const INCHEER=[
+ ['11/19','手機燈＋「We\'ll always be here」手幅','阿米 TIME 結束後打開手電筒，亮到〈Come Over〉結束（這場沒有紫色燈海）。歌曲進行中或接近結束時舉手幅，成員講話時繼續舉，下一首前放下。'],
+ ['11/21','紫色燈海＋「哇愛哩」手幅','入座後把手幅夾鏈袋裡的紫色光膜貼在手電筒上，阿米 TIME 後打開亮到歌曲結束。隨機歌曲結束、成員在旋轉舞台輪流講話時舉手幅。'],
+ ['11/22','紫色燈海＋「KEEP SWIMMING」手幅','燈海同 11/21。隨機歌曲結束、成員輪流講話時舉手幅。']
+];
+// ---------- state ----------
+let state={rev:0,added:[],checked:{}};
+try{state=JSON.parse(document.getElementById('state').textContent)||state;}catch(e){}
+try{const ls=JSON.parse(localStorage.getItem('kh-trip-state-v2')||'null'); if(ls&&ls.rev>state.rev) state=ls;}catch(e){}
+state.added=state.added||[];state.checked=state.checked||{};
+let artifactNS=null, localOnly=false, pubTimer=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const gmap=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+function twNow(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());const g=t=>(parts.find(p=>p.type===t)||{}).value;const h=g('hour')==='24'?'00':g('hour');return {d:g('year')+'-'+g('month')+'-'+g('day'),hm:h+':'+g('minute')};}
+const NOW=twNow(), today=NOW.d;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1800);}
+function buildDoc(){
+ const css=document.getElementById('css').textContent, app=document.getElementById('app').textContent;
+ const json=JSON.stringify(state).replace(/</g,'\\u003c');
+ return '<!DOCTYPE html>\n<html lang="zh-Hant">\n<head>\n'+HEAD+'<style id="css">'+css+'</style>\n</head>\n<body>\n<div id="root"></div>\n<script type="application/json" id="state">'+json+'<\/script>\n<script id="app">'+app+'<\/script>\n</body>\n</html>\n';
+}
+function save(){
+ state.rev=(state.rev||0)+1;
+ try{localStorage.setItem('kh-trip-state-v2',JSON.stringify(state));}catch(e){}
+ if(!artifactNS||localOnly) return;
+ clearTimeout(pubTimer);
+ pubTimer=setTimeout(async()=>{
+  try{ await artifactNS.publish(buildDoc()); }
+  catch(e){ const c=(e&&(e.code||e.name||e.message))||''; if(/not_granted|not_writer/.test(c)){localOnly=true;toast('已存在這支手機');} }
+ },900);
+}
+const dd=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
+let cdN='',cdL='';
+if(today<'2026-11-19'){cdN=dd(today,'2026-11-19');cdL='天後出發';}
+else if(today<='2026-11-22'){cdN='D'+(dd('2026-11-19',today)+1);cdL='旅程第 '+(dd('2026-11-19',today)+1)+' 天';}
+else {cdN='✿';cdL='旅程已結束';}
+
+// ---------- shell ----------
+document.getElementById('root').innerHTML=`
+<div class="wrap">
+ <header class="ticket"><div class="glow"></div>
+  <div class="tmain"><div>
+   <div class="eyebrow">BTS · ARIRANG · Kaohsiung</div>
+   <h1>高雄之旅</h1>
+   <div class="tmeta">2026.11.19 — 11.22 · 4 天 3 夜 · 三場全勤</div>
+  </div><div class="cd"><div class="n">${cdN}</div><div class="l">${cdL}</div></div></div>
+  <div class="stub">${SHOWS.map((iso,i)=>{const d=DAYS.find(x=>x[0]===iso);const cls=iso===today?'today':iso<today?'past':'';return `<button class="show ${cls}" data-venue="1" aria-label="${d[1]} 場館時間表"><div class="s">SHOW ${i+1}</div><div class="d">${d[1]} ${d[3]}</div><div class="s">19:00 · 世運</div></button>`;}).join('')}</div>
+ </header>
+ <div id="next"></div>
+ <div class="btns" style="margin-top:10px"><button class="btn" data-f="me" data-gomap="1">📍 看我附近有什麼</button></div>
+ <div class="tabs"><nav id="tabs"><a href="#plan" class="on">行程</a><a href="#map">地圖</a><a href="#fanzone">應援</a><a href="#list">清單</a><a href="#info">聯絡</a></nav></div>
+
+ <section id="plan"><div class="sh"><span class="i">01</span><h2>我的行程</h2><span class="en">Itinerary</span></div>
+  <ol class="days-list" id="steps"></ol>
+  <div class="note"><b>TIPS</b>在地圖或清單點地點就能加入行程，自己加的項目可以按 ✕ 刪除。點上方票券或演唱會那一行可看當天入場時間。</div>
+ </section>
+
+ <section id="map"><div class="sh"><span class="i">02</span><h2>地圖</h2><span class="en">Map</span></div>
+  <a class="btn primary" style="display:flex;justify-content:space-between;margin-bottom:12px;text-decoration:none" href="https://www.google.com/maps/d/viewer?mid=1BniXeeEipkwswPAXUirmeWiVI0ibFX8&amp;ll=22.70373966112771%2C120.2818720227539&amp;z=12" target="_blank" rel="noopener"><span>在 Google 地圖打開 BTS7（可導航）</span><span>↗</span></a>
+  <div class="filters" id="filters"></div>
+  <div class="mapbox"><svg id="svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="高雄示意地圖"></svg>
+   <div class="mapctl"><button id="zin" aria-label="放大">＋</button><button id="zout" aria-label="縮小">－</button><button id="zreset" style="font-size:12px" aria-label="看全部">全</button></div>
+   <div class="maplegend">示意地圖・點圓點看詳情</div></div>
+  <div id="routecard"></div>
+ </section>
+
+ <section id="fanzone"><div class="sh"><span class="i">03</span><h2>應援專區</h2><span class="en">Fan Support</span></div>
+  <div id="fanbox"></div>
+  <div class="card links" style="margin-top:12px"><div class="lbl" style="margin-top:0">參考網頁</div>
+   <div class="stack">
+    <a class="btn primary" href="https://yician0830.github.io/BTSSUPPORT/?" target="_blank" rel="noopener"><span>BTSSUPPORT 應援地圖</span><span>↗</span></a>
+    <a class="btn" href="https://btsarirang-in-taiwan-kaohsiung.pages.dev" target="_blank" rel="noopener"><span>BTS ARIRANG 錦囊妙計（高雄場）</span><span>↗</span></a>
+   </div></div>
+ </section>
+
+ <section id="list"><div class="sh"><span class="i">04</span><h2>地點清單</h2><span class="en">All Spots</span></div>
+  <div class="card" id="gcard"></div>
+  <div id="plist"></div>
+  <div class="note"><b>TIPS</b>點燈、優惠、展期都是新聞報導的資訊，出發前再上官網或粉專確認。</div>
+ </section>
+
+ <section id="info"><div class="sh"><span class="i">05</span><h2>住宿</h2><span class="en">Contacts</span></div>
+  <div class="card"><div class="lbl" style="margin-top:0">Hotel · 3 晚</div><div class="big">昭來商旅</div><div class="sub">高雄市苓雅區仁政里青年一路311號</div>
+   <div class="btns"><a class="btn primary" href="${gmap(PM.hotel.q)}" target="_blank" rel="noopener">開啟地圖</a><button class="btn" data-copy="高雄市苓雅區仁政里青年一路311號">複製地址</button></div>
+   <div class="btns" style="margin-top:8px"><button class="btn" data-f="near" data-gomap="1">看飯店周邊吃的・應援</button></div></div>
+ </section>
+ <footer>SEE YOU IN KAOHSIUNG · 💜</footer>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast" role="status"></div>`;
+
+// ---------- itinerary ----------
+function dayItems(iso){
+ const items=BASE[iso].map(b=>({...b,base:1})).concat(state.added.filter(a=>a.day===iso).map(a=>({s:a.time||'99:99',t:a.time||'未定',x:(PM[a.p]?.n||a.name||''),p:a.p,id:a.id})));
+ items.sort((a,b)=>a.s<b.s?-1:a.s>b.s?1:0);return items;
+}
+function actsFor(it){let h='';
+ if(it.v) h+=`<button class="chip solid" data-venue="1">場館時間表</button>`;
+ if(it.hsr) h+=`<button class="chip solid" data-hsr="1">車票資訊</button>`;
+ if(it.bus) h+=`<button class="chip solid" data-bus="1">專車資訊</button>`;
+ if(it.p) h+=`<button class="chip" data-open="${it.p}">地點</button>`;
+ return h;}
+function renderNext(){
+ const el=document.getElementById('next');let nx=null,nd=null;
+ for(const [iso] of DAYS){for(const it of dayItems(iso)){if(it.s==='99:99')continue;if(iso>today||(iso===today&&it.s>=NOW.hm)){nx=it;nd=iso;break;}}if(nx)break;}
+ if(!nx){el.innerHTML='';return;}
+ const d=DAYS.find(x=>x[0]===nd);
+ el.innerHTML=`<div class="next"><div class="tag"><small>NEXT</small><b>${esc(nx.t)}</b></div><div class="k">${d[1]} ${d[2]}${nd===today?' · 今天':''}</div><div class="x">${esc(nx.x)}</div><div class="acts">${actsFor(nx)}</div></div>`;
+}
+function renderPlan(){
+ const el=document.getElementById('steps'); let h='';
+ DAYS.forEach(([iso,md,wk,en,dn])=>{
+  const items=dayItems(iso), isShow=SHOWS.includes(iso), isToday=iso===today;
+  h+=`<li class="day${isShow?' showday':''}${isToday?' today':''}"><div class="rail"><span class="mo">NOV</span><span class="dn">${dn}</span><span class="wk">${wk}</span>${isShow?'<span class="flag">SHOW</span>':''}${isToday?'<span class="flag t">TODAY</span>':''}</div><ul class="evs">`;
+  items.forEach(it=>{
+   const a=actsFor(it);
+   h+=`<li><span class="t">${esc(it.t)}</span><span class="x${it.v?' v':''}">${esc(it.x)}${it.base?'':'<span class="mine">我加的</span>'}${a?`<div class="acts">${a}</div>`:''}</span>${it.base?'<span></span>':`<button class="del" data-del="${it.id}" aria-label="刪除">✕</button>`}</li>`;
+  });
+  if(!items.length) h+='<li><span></span><span class="empty">自由行程</span><span></span></li>';
+  h+='</ul></li>';
+ });
+ el.innerHTML=h;
+}
+// ---------- list ----------
+let filter='all';
+const icon=k=>{const c=CATS[k];return `<span class="ic" style="background:${c.c}1A;color:${c.c}">${c.g}</span>`;};
+let gmode=false;
+function renderGcard(){const el=document.getElementById('gcard');const ids=P.map(p=>p.id);const n=ids.filter(id=>state.checked['g_'+id]).length;
+ el.innerHTML=gmode?`<div class="lbl" style="margin-top:0">Google 地圖清單模式</div><div class="big">存進 Google 地圖清單</div><div class="sub">點「開 Google 地圖」→ 在 Google 地圖按「儲存」→ 選你的清單（例如「旅遊計畫」）→ 回來勾「已存」。勾選會記住，下次接著存。</div><div class="prog"><i style="width:${Math.round(n/ids.length*100)}%"></i></div><div class="sub" style="margin-top:6px">已存 <b style="color:var(--ok)">${n}</b> / ${ids.length}</div><div class="btns"><button class="btn" data-gmode="0">回到一般清單</button></div>`
+ :`<div class="big">想把地點存進 Google 地圖清單？</div><div class="sub">Google 不能整批匯入清單。打開這個模式，逐一點開、按儲存，會幫你記錄存到哪裡。</div><div class="btns"><button class="btn primary" data-gmode="1">開始存到 Google 地圖</button></div>`;}
+function renderList(){
+ renderGcard();
+ let h='';
+ Object.entries(CATS).forEach(([k,c])=>{
+  if(k==='fan'&&!gmode) return;
+  const ps=P.filter(p=>p.c===k); if(!ps.length) return;
+  h+=`<div class="grp"><i style="background:${c.c}"></i>${c.n}<span>${ps.length}</span></div><div class="card plist">`;
+  ps.forEach(p=>{const n=state.added.filter(a=>a.p===p.id).length;
+   if(gmode){const done=state.checked['g_'+p.id];h+=`<div class="prow" style="cursor:default"><input type="checkbox" class="ckbox" data-ck="g_${p.id}"${done?' checked':''} aria-label="已存 ${esc(p.n)}"><span style="flex:1;min-width:0"><div class="nm">${esc(p.n)}</div><div class="ds">${esc(p.sd||p.d).split('\n')[0]}</div></span><a class="chip${done?'':' ink'}" href="${esc(p.url||gmap(p.q))}" target="_blank" rel="noopener" style="flex:none">開 Google 地圖</a></div>`;return;}
+   h+=`<div class="prow" data-open="${p.id}">${icon(k)}<span style="min-width:0"><div class="nm">${esc(p.n)}${n?'<span class="added">已加入</span>':''}</div><div class="ds">${esc(p.sd||p.d)}</div><span class="w">${esc(p.w)}</span></span></div>`;});
+  h+='</div>';
+ });
+ document.getElementById('plist').innerHTML=h;
+ let f=`<button data-f="me" class="${filter==='me'?'on':''}"><i style="background:#2F7DE1"></i>我附近</button><button data-f="all" class="${filter==='all'?'on':''}">全部</button><button data-f="route" class="${filter==='route'?'on':''}"><i style="background:var(--show)"></i>港邊打卡路線</button><button data-f="near" class="${filter==='near'?'on':''}"><i style="background:var(--ink)"></i>飯店周邊</button><button data-f="fanzone" class="${filter==='fanzone'?'on':''}"><i style="background:${CATS.fan.c}"></i>應援地圖</button>`;
+ Object.entries(CATS).forEach(([k,c])=>{if(k==='base')return;f+=`<button data-f="${k}" class="${filter===k?'on':''}"><i style="background:${c.c}"></i>${c.n}</button>`;});
+ document.getElementById('filters').innerHTML=f;
+}
+function ck(id,label){return `<label class="ckrow"><input type="checkbox" data-ck="${id}"${state.checked[id]?' checked':''}><span>${label}</span></label>`;}
+function ckRow(p){return `<div class="prow"><input type="checkbox" class="ckbox" data-ck="${p.id}"${state.checked[p.id]?' checked':''} aria-label="打卡 ${esc(p.n)}"><span style="flex:1;min-width:0" data-open="${p.id}"><div class="nm">${esc(p.n)}</div><div class="ds">${esc(p.sd||p.d)}</div><span class="w">${esc(p.w)}</span></span></div>`;}
+function renderRoute(){const el=document.getElementById('routecard');
+ if(filter==='me'&&me){const ns=P.filter(p=>p.lat!=null&&p.c!=='base').map(p=>[p,distKm(p,me)]).filter(a=>a[1]<=2).sort((a,b)=>a[1]-b[1]).slice(0,40);
+  el.innerHTML=`<div class="grp"><i style="background:#2F7DE1"></i>你附近 2 km 內・由近到遠<span>${ns.length}</span></div>${ns.length?`<div class="card plist">${ns.map(([p,d])=>`<div class="prow" data-open="${p.id}">${icon(p.c)}<span style="min-width:0;flex:1"><div class="nm">${esc(p.n)}</div><div class="ds">${esc((p.sd||p.d).split('\n')[0])}</div><span class="w">直線約 ${d<1?Math.round(d*1000/50)*50+' m':d.toFixed(1)+' km'}・走路約 ${Math.max(1,Math.round(d*1.3/4.5*60))} 分</span></span></div>`).join('')}</div>`:'<div class="note">2 km 內沒有收錄的地點，按「全」看整張地圖。</div>'}<div class="note"><b>TIPS</b>位置會跟著你移動更新。距離是直線估算，部分位置為示意，導航請點地點裡的「從我這裡導航」。</div>`;return;}
+ if(filter==='near'){const h=PM.hotel;const dist=p=>Math.hypot((p.lat-h.lat)*111,(p.lng-h.lng)*111*0.9229);
+  const ns=P.filter(p=>p.c!=='base'&&nearHotel(p)).sort((a,b)=>dist(a)-dist(b));
+  el.innerHTML=`<div class="grp"><i style="background:var(--ink)"></i>昭來商旅周邊・約 1.5 km 內<span>${ns.length}</span></div><div class="card plist">${ns.map(p=>`<div class="prow" data-open="${p.id}">${icon(p.c)}<span style="min-width:0;flex:1"><div class="nm">${esc(p.n)}</div><div class="ds">${esc(p.sd||p.d)}</div><span class="w">直線約 ${(dist(p)*1000/50|0)*50} m</span></span></div>`).join('')}</div><div class="note"><b>TIPS</b>距離是直線估算、部分位置為示意，導航請點地點裡的 Google 地圖。</div>`;return;}
+ if(filter!=='route'){el.innerHTML='';return;}
+ const seen=new Set();const stops=ROUTE.filter(r=>{if(r.f)return true;if(seen.has(r.p))return false;seen.add(r.p);return true;});
+ const ids=[...new Set(ROUTE.filter(r=>!r.f).map(r=>r.p))], done=ids.filter(id=>state.checked[id]).length, tot=ids.length;
+ let n=0;
+ el.innerHTML=`<div class="card" style="margin-top:12px"><div class="lbl" style="margin-top:0">Walking Route</div><div class="big">駁二＋哈瑪星 → 旗津夕陽</div><div class="sub">還沒排進行程，先當打卡清單用｜紅線步行・藍虛線渡輪｜已打卡 <b style="color:var(--ok)">${done}</b> / ${tot}</div>
+ <div class="prog"><i style="width:${Math.round(done/tot*100)}%"></i></div>
+ <ul class="vt">${stops.map(r=>{const isF=r.f;if(!isF)n++;return `<li><span class="vtm">${isF?'渡輪':String(n).padStart(2,'0')}</span><span class="vd" style="${isF?'border-color:var(--sea);background:var(--sea)':state.checked[r.p]?'border-color:var(--ok);background:var(--ok)':''}"></span><span>${isF?`<div class="vh" style="color:var(--sea)">${esc(r.x)}</div>`:ck(r.p,`<b>${esc(r.x)}</b>`)}<div style="margin-top:4px"><button class="chip" data-open="${r.p}">地點</button></div></span></li>`;}).join('')}</ul>
+ <div class="note"><b>TIPS</b>11 月下旬高雄日落大約 17:10，建議 16:00 前搭上渡輪過旗津，邊吃邊逛到海岸公園等夕陽。渡輪大約 5–15 分鐘一班、船程約 5 分鐘。</div></div>
+ <div class="grp"><i style="background:${CATS.eat.c}"></i>港邊美食推薦<span>${EATS.length}</span></div><div class="card plist">${EATS.map(id=>ckRow(PM[id])).join('')}</div>`;}
+let fanMem='全部';
+const MEMS=['全部','BTS','RM','JIN','SUGA','J-HOPE','JIMIN','V','JUNGKOOK'];
+const memHit=f=>fanMem==='全部'||String(f.mem||'').toUpperCase().split(/[、,，\/\s]+/).includes(fanMem);
+const TYPE_ORDER=['應援咖啡廳','餐車','快閃店','展覽','應援企劃','公車站牌','燈箱/看板','LED電視牆','LED廣告車','超商廣告','城市應援'];
+function renderFan(){const el=document.getElementById('fanbox');if(!el)return;
+ let h=`<div class="card"><div class="lbl" style="margin-top:0">In-Venue Cheer</div><div class="big">場內應援（紫米番薯應援站，粉絲自發）</div><div class="sub" style="margin-top:4px">手幅 37×21 cm，舉在胸前不要高過頭；看台區在入場安檢處領，搖滾非 VIP 放在座位上，VIP 在 Soundcheck 後發。小幫手綁紫色飄帶。</div>
+ <ul class="vt">${INCHEER.map(c=>`<li${c[0]===today.slice(5).replace('-','/')?' class="hot"':''}><span class="vtm">${c[0]}</span><span class="vd"></span><span><div class="vh">${esc(c[1])}</div><div class="vs">${esc(c[2])}</div></span></li>`).join('')}</ul>
+ <div class="btns"><button class="btn primary" data-f="fanzone" data-gomap="1">在地圖上看應援點</button></div></div>`;
+ const fs=FANP.filter(memHit), done=fs.filter(f=>state.checked[f.id]).length;
+ h+=`<div class="lbl">粉絲應援 ${FANP.length} 項・依成員篩選</div><div class="filters" style="padding-bottom:4px">${MEMS.map(m=>`<button data-fm="${m}" class="${m===fanMem?'on':''}">${m==='全部'?'全部成員':m}</button>`).join('')}</div>
+ <div class="sub">顯示 ${fs.length} 項・已打卡 <b style="color:var(--ok)">${done}</b></div>`;
+ const types=[...TYPE_ORDER,...new Set(fs.map(f=>f.t).filter(t=>!TYPE_ORDER.includes(t)))];
+ types.forEach(t=>{const g=fs.filter(f=>f.t===t);if(!g.length)return;
+  h+=`<div class="grp"><i style="background:${CATS.fan.c}"></i>${esc(t)}<span>${g.length}</span></div><div class="card plist">${g.map(ckRow).join('')}</div>`;});
+ const ch=P.filter(p=>p.c==='cheer');
+ h+=`<div class="grp"><i style="background:${CATS.cheer.c}"></i>紫光・紅綠燈・看板<span>${ch.length}</span></div><div class="note" style="margin:0 0 10px"><b>PURPLE</b>全市紫燈每天 17:30–23:00，到 11/22。公車也有紫燈應援。<div class="btns" style="margin-top:8px"><a class="chip" href="${L_PURPLE.u}" target="_blank" rel="noopener">紫燈整理 IG ↗</a><a class="chip" href="${L_LIGHT.u}" target="_blank" rel="noopener">紅綠燈 IG ↗</a></div></div><div class="card plist">${ch.map(ckRow).join('')}</div>
+ <div class="note"><b>NOTE</b>粉絲應援整理自 yician0830 BTSSUPPORT 應援地圖（11/16 讀取，共 111 項，已去掉台北、全台和跟紫燈重複的項目），都是非官方整理。應援咖啡廳多半要配合店家低消、部分要預約；時間地點可能變動，出發前點「公告」看主辦最新貼文。</div>`;
+ el.innerHTML=h;}
+// ---------- map ----------
+const LON0=120.255,LAT1=22.732,K=6000,CX=0.9229;
+const X=l=>(l-LON0)*K*CX, Y=l=>(LAT1-l)*K;
+const W=Math.round(X(120.350)),H=Math.round(Y(22.583));
+const pts=a=>a.map(([la,lo])=>X(lo).toFixed(1)+','+Y(la).toFixed(1)).join(' ');
+const SEA=[[22.75,120.20],[22.75,120.280],[22.730,120.278],[22.712,120.274],[22.690,120.270],[22.670,120.266],[22.650,120.262],[22.632,120.262],[22.623,120.2635],[22.6185,120.2655],[22.617,120.2665],[22.612,120.2645],[22.604,120.2665],[22.595,120.2715],[22.585,120.278],[22.575,120.285],[22.55,120.20]];
+const HARBOR=[[22.6185,120.2675],[22.6205,120.2700],[22.6210,120.2750],[22.6195,120.2805],[22.6200,120.2845],[22.6175,120.2895],[22.6140,120.2935],[22.6060,120.2975],[22.5960,120.3030],[22.5850,120.3060],[22.5750,120.306],[22.575,120.293],[22.585,120.2855],[22.596,120.2785],[22.606,120.2715],[22.6135,120.2680]];
+const SHOU=[[22.660,120.270],[22.662,120.278],[22.650,120.281],[22.636,120.279],[22.628,120.272],[22.626,120.266],[22.640,120.264],[22.652,120.266]];
+const RIVER=[[22.6205,120.2845],[22.628,120.2875],[22.636,120.2895],[22.645,120.2920],[22.655,120.2960],[22.666,120.3005],[22.675,120.305]];
+const RED=[[22.732,120.3130],[22.7175,120.3045],[22.712,120.3015],[22.7020,120.3025],[22.6875,120.3080],[22.6760,120.3060],[22.6667,120.3030],[22.6570,120.3020],[22.6395,120.3020],[22.6310,120.3020],[22.6245,120.3010],[22.6135,120.3045],[22.5965,120.3150],[22.583,120.3200]];
+const ORANGE=[[22.6230,120.2715],[22.6240,120.2850],[22.6290,120.2955],[22.6310,120.3020],[22.6300,120.3170],[22.6280,120.3290],[22.6245,120.3405],[22.6230,120.350]];
+const LRT=[[22.6218,120.2735],[22.6200,120.2810],[22.6206,120.2872],[22.6160,120.2930],[22.6080,120.2990],[22.5990,120.3040],[22.5950,120.3070],[22.585,120.316]];
+const LAKE=[22.680,120.2962];
+let vb={x:0,y:0,w:W,h:H};
+const svg=document.getElementById('svg');
+function fitVB(list,pad){list=list.filter(p=>p.lat!=null);const xs=list.map(p=>X(p.lng)),ys=list.map(p=>Y(p.lat));const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);let w=Math.max(x1-x0,(y1-y0)*W/H)*pad,h=w*H/W;return {x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h};}
+const nearHotel=p=>{if(p.lat==null)return false;const h=PM.hotel;const dy=(p.lat-h.lat)*111,dx=(p.lng-h.lng)*111*0.9229;return Math.hypot(dx,dy)<=1.6;};
+const nearVB=()=>fitVB(P.filter(nearHotel),1.45);
+const fanVB=()=>fitVB(P.filter(p=>p.c==='fan'||p.c==='cheer'),1.15);
+const routeVB=()=>fitVB(ROUTE.map(r=>PM[r.p]),1.25);
+let me=null, watchId=null;
+const distKm=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*0.9229);
+function meVB(){const w=W/5,h=w*H/W;return {x:X(me.lng)-w/2,y:Y(me.lat)-h/2,w,h};}
+function locFail(e){filter='all';renderList();renderMap();
+ toast(e&&e.code===1?'沒有定位權限':'這個網頁開不了定位');
+ const el=document.getElementById('routecard');el.innerHTML=`<div class="note" style="margin-top:12px"><b>LOCATION</b>這裡讀不到你的位置。${e&&e.code===1?'請到手機「設定 → Safari（或 Chrome）→ 位置」允許定位，再按一次「我附近」。':'在 Claude 上打開的版本不能用定位，請改用可定位的網站版，或按上方「在 Google 地圖打開 BTS7」看藍點。'}</div>`;}
+function locate(){
+ if(!navigator.geolocation){locFail();return;}
+ toast('定位中…');
+ const ok=p=>{const first=!me;me={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy};if(first)vb=meVB();renderMap();if(filter==='me')renderRoute();};
+ try{navigator.geolocation.getCurrentPosition(p=>{filter='me';ok(p);renderList();renderRoute();
+   if(watchId==null){try{watchId=navigator.geolocation.watchPosition(ok,()=>{},{enableHighAccuracy:true,maximumAge:15000});}catch(e){}}
+  },locFail,{enableHighAccuracy:true,timeout:12000,maximumAge:30000});}catch(e){locFail();}
+}
+function zoomLvl(){return W/vb.w;}
+function renderMap(){
+ const z=zoomLvl(), r=7/z*Math.max(1,Math.min(z,2.2))/1.3, fs=11/z*Math.max(1,Math.min(z,2))/1.2, sw=1.5/z;
+ let s=`<rect x="-500" y="-500" width="${W+1000}" height="${H+1000}" fill="#F2F0EC"/>`;
+ s+=`<polygon points="${pts(SEA)}" fill="#D3E2EC"/>`;
+ s+=`<polygon points="${pts(HARBOR)}" fill="#D3E2EC"/>`;
+ s+=`<polygon points="${pts(SHOU)}" fill="#DCE7D2"/>`;
+ s+=`<ellipse cx="${X(LAKE[1])}" cy="${Y(LAKE[0])}" rx="${0.0035*K*CX}" ry="${0.006*K}" fill="#D3E2EC"/>`;
+ s+=`<polyline points="${pts(RIVER)}" fill="none" stroke="#D3E2EC" stroke-width="${5/z*Math.min(z,2)}" stroke-linecap="round"/>`;
+ s+=`<polyline points="${pts(RED)}" fill="none" stroke="#E4572E" stroke-width="${3/z*Math.min(z,2)}" opacity=".45" stroke-linecap="round" stroke-linejoin="round"/>`;
+ s+=`<polyline points="${pts(ORANGE)}" fill="none" stroke="#F2A541" stroke-width="${3/z*Math.min(z,2)}" opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>`;
+ s+=`<polyline points="${pts(LRT)}" fill="none" stroke="#5DAA68" stroke-width="${2.5/z*Math.min(z,2)}" opacity=".55" stroke-dasharray="${4/z} ${3/z}"/>`;
+ const lab=(t,la,lo,c)=>`<text x="${X(lo)}" y="${Y(la)}" font-size="${fs*1.05}" fill="${c||'#8EA6B5'}" font-weight="700" text-anchor="middle" letter-spacing="${fs*0.15}" style="pointer-events:none">${t}</text>`;
+ s+=lab('台灣海峽',22.665,120.258)+lab('高雄港',22.598,120.290)+lab('旗津',22.598,120.272,'#A6A08F')+lab('壽山',22.646,120.272,'#97AC88')+lab('愛河',22.648,120.2905)+lab('捷運紅線',22.645,120.3065,'#E4572E')+lab('捷運橘線',22.6345,120.320,'#E0942F');
+ const added=new Set(state.added.map(a=>a.p));
+ const RIDS=new Set(ROUTE.map(r=>r.p));
+ const list=P.filter(p=>filter==='me'?true:filter==='near'?(nearHotel(p)||p.c==='base'):filter==='fanzone'?(p.c==='fan'||p.c==='cheer'||p.c==='base'):filter==='route'?(RIDS.has(p.id)||EATS.includes(p.id)):(filter==='all'||p.c===filter||p.c==='base'));
+ if(filter==='route'){
+  for(let i=0;i<ROUTE.length-1;i++){const a=PM[ROUTE[i].p],b=PM[ROUTE[i+1].p];if(a===b)continue;const m=ROUTE[i].nx||'walk';const col=m==='walk'?'#C8364A':'#2D6FA8';
+   s+=`<line x1="${X(a.lng)}" y1="${Y(a.lat)}" x2="${X(b.lng)}" y2="${Y(b.lat)}" stroke="${col}" stroke-width="${2.6/z*Math.min(z,2.5)}" stroke-linecap="round" ${m==='walk'?'':`stroke-dasharray="${5/z} ${4/z}"`} opacity=".85"/>`;}
+ }
+ list.splice(0,list.length,...list.filter(p=>p.lat!=null));
+ list.sort((a,b)=>(a.c==='base')-(b.c==='base'));
+ list.forEach(p=>{const c=CATS[p.c], x=X(p.lng), y=Y(p.lat), rr=p.c==='base'?r*1.35:r;
+  s+=`<g class="pin" data-open="${p.id}">`;
+  s+=`<circle cx="${x}" cy="${y}" r="${rr*2.2}" fill="transparent"/>`;
+  s+=`<circle cx="${x}" cy="${y+rr*0.25}" r="${rr*1.05}" fill="rgba(30,20,50,.18)"/>`;
+  if(state.checked[p.id]) s+=`<circle cx="${x}" cy="${y}" r="${rr*1.9}" fill="#fff" stroke="#2E8577" stroke-width="${sw*1.6}"/>`;
+  if(added.has(p.id)) s+=`<circle cx="${x}" cy="${y}" r="${rr*1.55}" fill="none" stroke="${c.c}" stroke-width="${sw*1.4}"/>`;
+  s+=`<circle cx="${x}" cy="${y}" r="${rr}" fill="${c.c}" stroke="#fff" stroke-width="${sw*1.3}"/>`;
+  const rn=filter==='route'?ROUTE.map((r,i)=>r.p===p.id?i+1:0).filter(Boolean):[];
+  if(rn.length){s+=`<text x="${x}" y="${y+rr*0.4}" font-size="${rr*1.15}" font-weight="900" text-anchor="middle" fill="#fff" style="pointer-events:none">${rn.join('·')}</text>`;}
+  else if(p.c==='base') s+=`<text x="${x}" y="${y+rr*0.38}" font-size="${rr*1.1}" text-anchor="middle" fill="#fff" style="pointer-events:none">★</text>`;
+  if(p.c==='base'||z>=1.7||(filter==='route'&&(RIDS.has(p.id)&&z>=1.2))){const nm=p.n.replace(/（.*?）/g,'').replace(/「.*?」/,'');
+   s+=`<text x="${x+rr*1.4}" y="${y+fs*0.35}" font-size="${p.c==='base'?fs*1.1:fs}" font-weight="${p.c==='base'?900:700}" fill="${p.c==='base'?'#1D1924':c.c}" paint-order="stroke" stroke="#F2F0EC" stroke-width="${3/z}" style="pointer-events:none">${esc(nm)}</text>`;}
+  s+='</g>';
+ });
+ if(me){const mx=X(me.lng),my=Y(me.lat),rr=r*1.1,acc=Math.min((me.acc||50)/1000*K,W/4);
+  s+=`<circle cx="${mx}" cy="${my}" r="${Math.max(acc,rr*2)}" fill="rgba(47,125,225,.12)" stroke="rgba(47,125,225,.35)" stroke-width="${sw}"/><circle cx="${mx}" cy="${my}" r="${rr}" fill="#2F7DE1" stroke="#fff" stroke-width="${sw*2}"/>`;
+  s+=`<text x="${mx+rr*1.6}" y="${my+fs*0.35}" font-size="${fs*1.1}" font-weight="900" fill="#2F7DE1" paint-order="stroke" stroke="#F2F0EC" stroke-width="${3/z}" style="pointer-events:none">我</text>`;}
+ svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+ svg.innerHTML=s;
+}
+function clampVB(){vb.w=Math.max(W/8,Math.min(W*1.05,vb.w));vb.h=vb.w*H/W;vb.x=Math.max(-W*0.1,Math.min(W*1.1-vb.w,vb.x));vb.y=Math.max(-H*0.1,Math.min(H*1.1-vb.h,vb.y));}
+function zoomAt(f,cx,cy){const nw=vb.w/f;if(cx==null){cx=vb.x+vb.w/2;cy=vb.y+vb.h/2;}vb.x=cx-(cx-vb.x)*(nw/vb.w);vb.y=cy-(cy-vb.y)*(nw/vb.w);vb.w=nw;vb.h=nw*H/W;clampVB();renderMap();}
+function toSvg(px,py){const r=svg.getBoundingClientRect();const sc=Math.max(vb.w/r.width,vb.h/r.height);const ox=(r.width*sc-vb.w)/2, oy=(r.height*sc-vb.h)/2;return {x:vb.x-ox+(px-r.left)*sc,y:vb.y-oy+(py-r.top)*sc,sc};}
+const ptrs=new Map(); let moved=0, startDist=0, startW=0, downTarget=null;
+svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;downTarget=e.target.closest('[data-open]');if(ptrs.size===2){const [a,b]=[...ptrs.values()];startDist=Math.hypot(a.x-b.x,a.y-b.y);startW=vb.w;}});
+svg.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);const cur={x:e.clientX,y:e.clientY};
+ if(ptrs.size===1){const {sc}=toSvg(0,0);const dx=cur.x-prev.x,dy=cur.y-prev.y;moved+=Math.abs(dx)+Math.abs(dy);vb.x-=dx*sc;vb.y-=dy*sc;clampVB();svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);}
+ ptrs.set(e.pointerId,cur);
+ if(ptrs.size===2){moved+=10;const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);const m=toSvg((a.x+b.x)/2,(a.y+b.y)/2);const nw=startW*startDist/d;zoomAt(vb.w/nw,m.x,m.y);}});
+const up=e=>{if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);if(ptrs.size===0){if(moved<8&&downTarget)openPlace(downTarget.dataset.open);else if(moved>=8)renderMap();downTarget=null;}};
+svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+svg.addEventListener('wheel',e=>{e.preventDefault();const m=toSvg(e.clientX,e.clientY);zoomAt(e.deltaY<0?1.2:1/1.2,m.x,m.y);},{passive:false});
+document.getElementById('zin').onclick=()=>zoomAt(1.5);
+document.getElementById('zout').onclick=()=>zoomAt(1/1.5);
+document.getElementById('zreset').onclick=()=>{vb={x:0,y:0,w:W,h:H};renderMap();};
+// ---------- sheet ----------
+const sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+function showSheet(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.scrollTop=0;sheet.classList.add('show');scrim.classList.add('show');}
+function closeSheet(){sheet.classList.remove('show');scrim.classList.remove('show');}
+scrim.onclick=closeSheet;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+const catTag=(color,label)=>`<span class="cat"><i style="background:${color}"></i>${label}</span>`;
+let pickDay=null;
+function openPlace(id){const p=PM[id];if(!p)return;const c=CATS[p.c];
+ pickDay=DAYS.some(d=>d[0]===today)?today:'2026-11-20';
+ const ins=state.added.filter(a=>a.p===id).map(a=>{const d=DAYS.find(x=>x[0]===a.day);return (d?d[1]:'')+(a.time?' '+a.time:'');});
+ showSheet(`${catTag(c.c,c.n)}<h3>${esc(p.n)}</h3><div class="sub">${esc(p.d)}</div>
+ <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="chip static">${esc(p.w)}</span>${ins.length?`<span class="chip static ink">已在行程：${esc(ins.join('、'))}</span>`:''}</div>
+ ${p.links&&p.links.length?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${p.links.map(l=>`<a class="chip" href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)} ↗</a>`).join('')}</div>`:''}
+ <div style="margin-top:14px">${ck(id,'<b>'+(p.c==='eat'?'吃過了':'打卡了')+'</b>')}</div>
+ <div class="btns"><a class="btn primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=${encodeURIComponent(p.q)}" target="_blank" rel="noopener">從我這裡導航 ↗</a><a class="btn" href="${esc(p.url||gmap(p.q))}" target="_blank" rel="noopener">Google 地圖 ↗</a>${id==='stadium'?'<button class="btn" data-venue="1">場館時間表</button>':''}</div>
+ <div class="lbl">加入行程・選日期</div>
+ <div class="dpick">${DAYS.map(d=>`<button data-day="${d[0]}" class="${d[0]===pickDay?'on':''}">${d[1]}<br><small>${d[2]}</small></button>`).join('')}</div>
+ <div class="lbl"><label for="ptime">時間（可不填）</label></div><input type="time" id="ptime">
+ <div class="btns"><button class="btn primary" data-add="${id}">加入行程</button></div>`);
+}
+function openVenue(){
+ showSheet(`${catTag('var(--show)','演出日')}<h3>場館時間表</h3><div class="sub">11/19・11/21・11/22 皆 19:00 開演｜依你提供的截圖整理，以官方與應援公告為準</div>
+ <ul class="vt">${VENUE.map(v=>`<li${v[3]?' class="hot"':''}><span class="vtm">${esc(v[0])}</span><span class="vd"></span><span><div class="vh">${esc(v[1])}</div>${v[2]?`<div class="vs">${esc(v[2])}</div>`:''}</span></li>`).join('')}</ul>
+ <div class="btns"><a class="btn" href="${gmap(PM.stadium.q)}" target="_blank" rel="noopener">場館地圖 ↗</a><button class="btn primary" id="closeS">關閉</button></div>`);
+}
+function openHsr(){
+ showSheet(`${catTag('var(--show)','11/19 去程')}<h3>高鐵 809 次</h3><div class="sub">單程・2026/11/19・大學生 1 張</div>
+ <ul class="vt">
+  <li><span class="vtm">08:11</span><span class="vd"></span><span><div class="vh">台北 出發</div></span></li>
+  <li><span class="vtm">10:25</span><span class="vd"></span><span><div class="vh">左營 抵達</div><div class="vs">可轉捷運紅線 R16 左營站</div></span></li>
+ </ul>
+ <dl class="kv"><dt>車廂／座位</dt><dd>4 車 19D</dd></dl>
+ <div class="sub" style="margin-top:8px">訂位代號、票號請看 T Express App。</div>
+ <div class="btns"><button class="btn" id="closeS">關閉</button></div>`);
+}
+function openBus(){
+ showSheet(`${catTag('var(--show)','11/22 回程')}<h3>B02 返鄉專車</h3><div class="sub">高雄世運主場館 → 雙北市（中和・板橋・新莊）｜宸遊旅行社・單程票 2 張</div>
+ <ul class="vt">
+  <li class="hot"><span class="vtm">散場後<br>45 分內</span><span class="vd"></span><span><div class="vh">上車：世運大道，依路線編號排隊</div><div class="vs">我們是 02 號線（第一班次 01–23），最後發車時間是演唱會結束後 45 分鐘。散場後照編號去上車口，所有上車口都不用穿越世運大道。</div></span></li>
+  <li><span class="vtm">下車 1</span><span class="vd"></span><span><div class="vh">中和</div><div class="vs">中正路與連城路路口</div></span></li>
+  <li><span class="vtm">下車 2</span><span class="vd"></span><span><div class="vh">板橋車站</div></span></li>
+  <li><span class="vtm">下車 3</span><span class="vd"></span><span><div class="vh">新莊</div><div class="vs">捷運頭前庄站 02 號出口</div></span></li>
+ </ul>
+ <div class="lbl">散場上車位置（宸遊 11/16 公告）</div>
+ <dl class="kv" style="font-family:inherit"><dt>01–07・51–57</dt><dd style="font-family:var(--body);font-size:14px">場館正前方廣場最<b>左邊（西側）</b>，靠服務台與行李寄放處 ← 02 號在這區</dd><dt>08–18・58–68</dt><dd style="font-family:var(--body);font-size:14px">廣場中間</dd><dt>19–23・69–73</dt><dd style="font-family:var(--body);font-size:14px">廣場右邊（東側）</dd></dl>
+ <ul class="vt">
+  <li><span class="vtm">找舉牌</span><span class="vd"></span><span><div class="vh">每條路線都有發亮的手舉燈牌</div><div class="vs">燈牌上寫路線編號，照編號排隊；不確定位置就問舉牌人員。廣場上也有紅色「返鄉專車 ←→」方向指示牌。</div></span></li>
+  <li><span class="vtm">別走錯</span><span class="vd"></span><span><div class="vh">不要往「捷運油廠國小站」方向</div><div class="vs">場館東側有指往油廠國小站的人流，那是搭捷運的，搭返鄉專車千萬不要跟著走。世運大道東段是往高鐵／台鐵的接駁車，也不是我們的車。</div></span></li>
+  <li><span class="vtm">第二班次</span><span class="vd"></span><span><div class="vh">51–73 號（不是我們）</div><div class="vs">最後發車是散場後 80 分鐘，可以先排隊，但要等約 60 分鐘車輛補進月台才開放上車。第一班次最後一台車如果有空位，會由第二班次依序遞補。</div></span></li>
+ </ul>
+ <div class="lbl">行李寄存（服務台旁）</div>
+ <div class="sub">13:00 到演唱會結束，限搭返鄉專車的人用，寄放前要出示車票（票種 A、B、K 都可以）。單件 150 元（20 吋登機箱、後背包或差不多大的手提袋），其他尺寸單件 200 元。</div>
+ <div class="note"><b>TIPS</b>散場人潮多，聽完最後一首安可就往世運大道移動。散場後 2 小時內客服都在現場，LINE、FB、IG 不會回訊息，有急事直接打專線。洽詢：LINE @homebus、專車專線 0966-506-645</div>
+ <div class="btns"><a class="btn primary" href="https://www.facebook.com/chenyutravel/" target="_blank" rel="noopener">FB 公告 ↗</a><button class="btn" data-copy="0966506645">複製專線</button></div>
+ <div class="btns"><button class="btn" id="closeS">關閉</button></div>`);
+}
+// ---------- events ----------
+document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.ck;if(!id)return;if(e.target.checked)state.checked[id]=true;else delete state.checked[id];save();renderMap();renderRoute();renderFan();if(id.startsWith('g_')){renderList();toast(e.target.checked?'已存 ✓':'已取消');return;}toast(e.target.checked?'打卡 ✓':'已取消');});
+document.addEventListener('click',async e=>{
+ const t=e.target;
+ if(t.closest('.ckbox')||t.closest('.ckrow')) return;
+ const fm=t.closest('[data-fm]'); if(fm){fanMem=fm.dataset.fm;renderFan();return;}
+ const gm=t.closest('[data-gmode]'); if(gm){gmode=gm.dataset.gmode==='1';renderList();document.getElementById('list').scrollIntoView({behavior:'smooth'});return;}
+ const cp=t.closest('[data-copy]'); if(cp){try{await navigator.clipboard.writeText(cp.dataset.copy);toast('已複製');}catch(err){toast('無法複製，請長按文字');}return;}
+ if(t.closest('[data-venue]')){openVenue();return;}
+ if(t.closest('[data-bus]')){openBus();return;}
+ if(t.closest('[data-hsr]')){openHsr();return;}
+ if(t.id==='closeS'){closeSheet();return;}
+ const dy=t.closest('[data-day]'); if(dy){pickDay=dy.dataset.day;sheet.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('on',b===dy));return;}
+ const ad=t.closest('[data-add]'); if(ad){const tm=(document.getElementById('ptime')||{}).value||'';
+  state.added.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),p:ad.dataset.add,day:pickDay,time:tm});
+  save();renderAll();closeSheet();const d=DAYS.find(x=>x[0]===pickDay);toast('已加入 '+d[1]+(tm?' '+tm:''));return;}
+ const dl=t.closest('[data-del]'); if(dl){state.added=state.added.filter(a=>a.id!==dl.dataset.del);save();renderAll();toast('已刪除');return;}
+ const f=t.closest('[data-f]'); if(f&&f.dataset.f==='me'){locate();if(f.dataset.gomap)document.getElementById('map').scrollIntoView({behavior:'smooth'});return;}
+ if(f){filter=f.dataset.f;vb=filter==='route'?routeVB():filter==='fanzone'?fanVB():filter==='near'?nearVB():{x:0,y:0,w:W,h:H};renderList();renderMap();renderRoute();if(f.dataset.gomap)document.getElementById('map').scrollIntoView({behavior:'smooth'});return;}
+ const op=t.closest('[data-open]'); if(op&&!svg.contains(op)){openPlace(op.dataset.open);return;}
+});
+// tab highlight
+const tabs=[...document.querySelectorAll('#tabs a')];
+const secs=tabs.map(a=>document.querySelector(a.getAttribute('href')));
+function syncTabs(){let cur=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<120)cur=i;});tabs.forEach((a,i)=>a.classList.toggle('on',i===cur));}
+window.addEventListener('scroll',syncTabs,{passive:true});
+function renderAll(){renderNext();renderPlan();renderList();renderMap();renderRoute();renderFan();}
+renderAll();syncTabs();
+if(false&&window.claude&&window.claude.use){window.claude.use('artifact').then(a=>{artifactNS=a;}).catch(()=>{});}
+})();
+</script>
+</body>
+</html>
