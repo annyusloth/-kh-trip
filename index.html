@@ -97,6 +97,7 @@ section{margin-top:34px;scroll-margin-top:70px}
 .evs .x.v{font-weight:700}
 .evs .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .mine{font-size:10px;font-weight:700;color:var(--accent-ink);background:var(--wash);border-radius:5px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.dayhead{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px 0}.chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .del{border:0;background:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px 4px;line-height:1}
 .empty{color:var(--muted);font-size:14px;padding:12px 0}
 
@@ -143,6 +144,7 @@ section{margin-top:34px;scroll-margin-top:70px}
 .dpick button small{font-weight:400;color:var(--muted)}
 .dpick button.on{border-color:var(--accent);background:var(--accent);color:#fff}
 .dpick button.on small{color:#E3DAF7}
+.inp{font-size:16px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;width:100%;color:var(--ink);font-family:inherit}
 .sheet input[type=time]{font-size:16px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;width:100%;color:var(--ink)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin-top:12px;background:#F7F5FA;border-radius:14px;padding:12px 14px}
 .kv dt{font-size:12px;color:var(--muted);padding-top:3px}
@@ -330,11 +332,63 @@ P.push(
 const PM={};P.forEach(p=>PM[p.id]=p);
 const DAYS=[['2026-11-19','11/19','週四','THU','19'],['2026-11-20','11/20','週五','FRI','20'],['2026-11-21','11/21','週六','SAT','21'],['2026-11-22','11/22','週日','SUN','22']];
 const SHOWS=['2026-11-19','2026-11-21','2026-11-22'];
-const BASE={
- '2026-11-19':[{s:'08:11',t:'08:11',x:'高鐵 809 次 台北 → 左營（10:25 到）・4 車 19D',p:'hsr',hsr:1},{s:'10:30',t:'10:25 後',x:'前往昭來商旅放行李',p:'hotel'},{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1}],
- '2026-11-20':[{s:'18:10',t:'18:10',x:'ARIRANG 快閃店 @ 義享天地 1F',p:'popup'}],
- '2026-11-21':[{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1}],
- '2026-11-22':[{s:'19:00',t:'19:00',x:'BTS〈ARIRANG〉演唱會 @ 世運',p:'stadium',v:1},{s:'23:00',t:'散場後',x:'B02 返鄉專車（回程）・散場後 45 分鐘內上車',bus:1}]
+const DAYCOL={'2026-11-19':'#C8364A','2026-11-20':'#5A3E9E','2026-11-21':'#2D6FA8','2026-11-22':'#2E8577'};
+const I=(t,x,p,k)=>({t,x,p:p||'',k:k||''});
+const DEFAULT_PLAN={
+ '2026-11-19':[
+  I('08:11','高鐵 809 次 台北 → 左營（10:25 到）・4 車 19D','hsr','hsr'),
+  I('10:25','太成肉包左營店：紫色肉包當早午餐','taicheng_zy'),
+  I('10:40','捷運紅線到中央公園站（約 20 分），走回飯店；拖行李可搭計程車約 20 分',''),
+  I('11:10','昭來商旅放行李','hotel'),
+  I('11:15','特好喝紫玉系列（11/19 新上市）','tetea'),
+  I('11:30','中央公園站搭紅線到世運站（約 25 分）',''),
+  I('12:00','ARMY ZONE 領粽卡（籃球場，到 17:00）→ VIP 報到 → 買周邊','stadium','venue'),
+  I('13:00','廣場美食街午餐；看世運站燈箱、公車站牌','f_BTS-kh-bii1'),
+  I('14:30','VIP 進場（E、F、G 門／H 車道）・16:00 彩排','stadium','venue'),
+  I('19:00','BTS〈ARIRANG〉第一場','stadium','venue'),
+  I('22:30','宵夜：六合夜市（營業到 02:00，有 7 面成員電視牆）','liuhe'),
+  I('23:30','穿過中央公園走回飯店（聖誕燈亮到 24:00）','cpark_deco')],
+ '2026-11-20':[
+  I('09:00','興隆居早餐：湯包、燒餅','f_xlj'),
+  I('09:30','美麗島站光之穹頂、JIN 公車站牌、墨凡商場','mofan'),
+  I('10:30','駁二 JIN 攝影展（Pinway 8 號倉庫）','f_jin-exhibit'),
+  I('11:00','大港橋','bridge'),
+  I('11:15','輕軌光榮碼頭站 BTS 紅綠燈','light'),
+  I('11:30','高流音浪塔','kpmc'),
+  I('11:45','SUGA 應援咖啡廳 Ballon J','f_SG-KH-CAFE'),
+  I('12:15','鹽埕午餐：鴨肉珍、尚芳；甜點 The Borage','yazhen'),
+  I('13:15','捷運到巨蛋（約 25 分）',''),
+  I('13:45','泰柾應援餐車（限量 160 份，先排）','f_JV-KH-FOOD'),
+  I('14:15','COMPOSE 篤敬店：黃色杯＋V 海報','compose'),
+  I('14:45','GOLDEN VIBE：V 應援咖啡廳＋外牆看板','f_tae-cafe2'),
+  I('15:30','漢神巨蛋：I PURPLE YOU、NIKE／LADOR 快閃','hanshin'),
+  I('16:15','聯上大飯店 LED 牆、巨蛋站燈箱與公車站牌','p_lianshang'),
+  I('16:40','號錫看板（方師傅上方）、明華富國路口看板','f_JHOPE-KH-BII1'),
+  I('17:15','義享時尚廣場戶外 LED、巨幅壁貼','f_BTS-CITY4'),
+  I('18:10','ARIRANG 快閃店 @ 義享天地 1F','popup'),
+  I('19:00','瑞豐夜市晚餐：V 看板、J-HOPE 電視牆','ruifeng'),
+  I('20:30','蓮池潭龍虎塔、春秋閣紫燈（到 23:00）','lotus'),
+  I('21:30','回飯店；有體力繞 85 大樓看紫燈','85')],
+ '2026-11-21':[
+  I('09:30','咖啡覺醒早午餐','awaken'),
+  I('10:30','駁二 → 哈瑪星鐵道文化園區','hamasen'),
+  I('11:15','鼓山輪渡站搭渡輪到旗津','ferry'),
+  I('11:30','旗津老街午餐','cijinst'),
+  I('12:30','旗津海岸公園、彩虹教堂','cijinpark'),
+  I('13:15','渡輪回鼓山',''),
+  I('15:30','到世運；ARMY ZONE 用當天票可再領粽卡','stadium','venue'),
+  I('16:30','一般票進場，入座先貼紫色燈海光膜','stadium','venue'),
+  I('19:00','BTS〈ARIRANG〉第二場','stadium','venue'),
+  I('22:45','宵夜：自強夜市（或春日蒜香豆干、湯棧）','zq_market'),
+  I('23:30','中央公園散步回飯店','cpark_deco')],
+ '2026-11-22':[
+  I('09:30','退房，行李帶去世運','hotel'),
+  I('11:00','VIP 報到、ARMY ZONE 領粽卡','stadium','venue'),
+  I('13:00','宸遊服務台寄放行李（一件 150 元）','stadium','bus'),
+  I('13:15','廣場美食街吃飯，買上車零食','stadium'),
+  I('14:30','VIP 進場・16:00 彩排','stadium','venue'),
+  I('19:00','BTS〈ARIRANG〉第三場','stadium','venue'),
+  I('散場後','B02 返鄉專車：45 分內到最左邊找 02 號燈牌','stadium','bus')]
 };
 const VENUE=[
  ['10:00 起','贊助商攤位 ARIH／VISA／SAMSUNG','ARIH 10:00–19:00；VISA 11:00–19:00（其餘依現場公告）'],
@@ -368,6 +422,14 @@ let state={rev:0,added:[],checked:{}};
 try{state=JSON.parse(document.getElementById('state').textContent)||state;}catch(e){}
 try{const ls=JSON.parse(localStorage.getItem('kh-trip-state-v2')||'null'); if(ls&&ls.rev>state.rev) state=ls;}catch(e){}
 state.added=state.added||[];state.checked=state.checked||{};
+const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const tkey=t=>{const m=String(t||'').match(/^(\d{1,2}):(\d{2})/);return m?m[1].padStart(2,'0')+':'+m[2]:'99:99';};
+function insertByTime(arr,it){const k=tkey(it.t);if(k==='99:99'){arr.push(it);return;}let i=arr.findIndex(x=>tkey(x.t)>k);if(i<0)arr.push(it);else arr.splice(i,0,it);}
+if(!state.plan){state.plan=JSON.parse(JSON.stringify(DEFAULT_PLAN));
+ Object.values(state.plan).forEach(a=>a.forEach(it=>it.id=it.id||newId()));
+ state.added.forEach(a=>{if(state.plan[a.day])insertByTime(state.plan[a.day],{id:a.id||newId(),t:a.time||'',x:PM[a.p]?PM[a.p].n:'',p:a.p,k:''});});
+ state.added=[];}
+Object.values(state.plan).forEach(a=>a.forEach(it=>{it.id=it.id||newId();}));
 let artifactNS=null, localOnly=false, pubTimer=null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const gmap=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
@@ -412,7 +474,7 @@ document.getElementById('root').innerHTML=`
 
  <section id="plan"><div class="sh"><span class="i">01</span><h2>我的行程</h2><span class="en">Itinerary</span></div>
   <ol class="days-list" id="steps"></ol>
-  <div class="note"><b>TIPS</b>在地圖或清單點地點就能加入行程，自己加的項目可以按 ✕ 刪除。點上方票券或演唱會那一行可看當天入場時間。</div>
+  <div class="note"><b>TIPS</b>每一項都能按 ✎ 改時間、內容、地點、上下移或刪除，也可以按「＋ 新增」。點「看這天路線」會在地圖上畫出當天路線。點上方票券或演唱會那一行可看當天入場時間。</div>
  </section>
 
  <section id="map"><div class="sh"><span class="i">02</span><h2>地圖</h2><span class="en">Map</span></div>
@@ -451,34 +513,34 @@ document.getElementById('root').innerHTML=`
 <div class="toast" id="toast" role="status"></div>`;
 
 // ---------- itinerary ----------
-function dayItems(iso){
- const items=BASE[iso].map(b=>({...b,base:1})).concat(state.added.filter(a=>a.day===iso).map(a=>({s:a.time||'99:99',t:a.time||'未定',x:(PM[a.p]?.n||a.name||''),p:a.p,id:a.id})));
- items.sort((a,b)=>a.s<b.s?-1:a.s>b.s?1:0);return items;
-}
-function actsFor(it){let h='';
- if(it.v) h+=`<button class="chip solid" data-venue="1">場館時間表</button>`;
- if(it.hsr) h+=`<button class="chip solid" data-hsr="1">車票資訊</button>`;
- if(it.bus) h+=`<button class="chip solid" data-bus="1">專車資訊</button>`;
- if(it.p) h+=`<button class="chip" data-open="${it.p}">地點</button>`;
+function dayItems(iso){return state.plan[iso]||[];}
+const planPlaces=()=>{const m={};Object.entries(state.plan).forEach(([d,a])=>a.forEach(it=>{if(it.p)(m[it.p]=m[it.p]||[]).push([d,it]);}));return m;};
+function gLink(it){const p=PM[it.p];if(p)return p.url||gmap(p.q);if(it.q)return gmap(it.q);return '';}
+function actsFor(it,iso){let h='';
+ if(it.k==='venue') h+=`<button class="chip solid" data-venue="1">場館時間表</button>`;
+ if(it.k==='hsr') h+=`<button class="chip solid" data-hsr="1">車票資訊</button>`;
+ if(it.k==='bus') h+=`<button class="chip solid" data-bus="1">專車資訊</button>`;
+ const g=gLink(it); if(g) h+=`<a class="chip" href="${esc(g)}" target="_blank" rel="noopener">Google 地圖 ↗</a>`;
+ if(it.p&&PM[it.p]) h+=`<button class="chip" data-open="${it.p}">詳情</button>`;
  return h;}
 function renderNext(){
  const el=document.getElementById('next');let nx=null,nd=null;
- for(const [iso] of DAYS){for(const it of dayItems(iso)){if(it.s==='99:99')continue;if(iso>today||(iso===today&&it.s>=NOW.hm)){nx=it;nd=iso;break;}}if(nx)break;}
+ for(const [iso] of DAYS){for(const it of dayItems(iso)){const k=tkey(it.t);if(k==='99:99')continue;if(iso>today||(iso===today&&k>=NOW.hm)){nx=it;nd=iso;break;}}if(nx)break;}
  if(!nx){el.innerHTML='';return;}
  const d=DAYS.find(x=>x[0]===nd);
- el.innerHTML=`<div class="next"><div class="tag"><small>NEXT</small><b>${esc(nx.t)}</b></div><div class="k">${d[1]} ${d[2]}${nd===today?' · 今天':''}</div><div class="x">${esc(nx.x)}</div><div class="acts">${actsFor(nx)}</div></div>`;
+ el.innerHTML=`<div class="next"><div class="tag"><small>NEXT</small><b>${esc(nx.t)}</b></div><div class="k">${d[1]} ${d[2]}${nd===today?' · 今天':''}</div><div class="x">${esc(nx.x)}</div><div class="acts">${actsFor(nx,nd)}</div></div>`;
 }
 function renderPlan(){
  const el=document.getElementById('steps'); let h='';
  DAYS.forEach(([iso,md,wk,en,dn])=>{
   const items=dayItems(iso), isShow=SHOWS.includes(iso), isToday=iso===today;
-  h+=`<li class="day${isShow?' showday':''}${isToday?' today':''}"><div class="rail"><span class="mo">NOV</span><span class="dn">${dn}</span><span class="wk">${wk}</span>${isShow?'<span class="flag">SHOW</span>':''}${isToday?'<span class="flag t">TODAY</span>':''}</div><ul class="evs">`;
+  h+=`<li class="day${isShow?' showday':''}${isToday?' today':''}"><div class="rail"><span class="mo">NOV</span><span class="dn">${dn}</span><span class="wk">${wk}</span>${isShow?'<span class="flag">SHOW</span>':''}${isToday?'<span class="flag t">TODAY</span>':''}</div><div style="min-width:0"><div class="dayhead"><button class="chip" data-f="day:${iso}" data-gomap="1"><i class="dot" style="background:${DAYCOL[iso]}"></i>看這天路線</button><button class="chip" data-newitem="${iso}">＋ 新增</button></div><ul class="evs">`;
   items.forEach(it=>{
-   const a=actsFor(it);
-   h+=`<li><span class="t">${esc(it.t)}</span><span class="x${it.v?' v':''}">${esc(it.x)}${it.base?'':'<span class="mine">我加的</span>'}${a?`<div class="acts">${a}</div>`:''}</span>${it.base?'<span></span>':`<button class="del" data-del="${it.id}" aria-label="刪除">✕</button>`}</li>`;
+   const a=actsFor(it,iso);
+   h+=`<li><span class="t">${esc(it.t||'未定')}</span><span class="x${it.k==='venue'&&/第.場/.test(it.x)?' v':''}">${esc(it.x)}${a?`<div class="acts">${a}</div>`:''}</span><button class="del" data-edit="${iso}|${it.id}" aria-label="編輯">✎</button></li>`;
   });
   if(!items.length) h+='<li><span></span><span class="empty">自由行程</span><span></span></li>';
-  h+='</ul></li>';
+  h+='</ul></div></li>';
  });
  el.innerHTML=h;
 }
@@ -496,19 +558,28 @@ function renderList(){
   if(k==='fan'&&!gmode) return;
   const ps=P.filter(p=>p.c===k); if(!ps.length) return;
   h+=`<div class="grp"><i style="background:${c.c}"></i>${c.n}<span>${ps.length}</span></div><div class="card plist">`;
-  ps.forEach(p=>{const n=state.added.filter(a=>a.p===p.id).length;
+  const PPm=planPlaces();ps.forEach(p=>{const n=(PPm[p.id]||[]).length;
    if(gmode){const done=state.checked['g_'+p.id];h+=`<div class="prow" style="cursor:default"><input type="checkbox" class="ckbox" data-ck="g_${p.id}"${done?' checked':''} aria-label="已存 ${esc(p.n)}"><span style="flex:1;min-width:0"><div class="nm">${esc(p.n)}</div><div class="ds">${esc(p.sd||p.d).split('\n')[0]}</div></span><a class="chip${done?'':' ink'}" href="${esc(p.url||gmap(p.q))}" target="_blank" rel="noopener" style="flex:none">開 Google 地圖</a></div>`;return;}
    h+=`<div class="prow" data-open="${p.id}">${icon(k)}<span style="min-width:0"><div class="nm">${esc(p.n)}${n?'<span class="added">已加入</span>':''}</div><div class="ds">${esc(p.sd||p.d)}</div><span class="w">${esc(p.w)}</span></span></div>`;});
   h+='</div>';
  });
  document.getElementById('plist').innerHTML=h;
- let f=`<button data-f="me" class="${filter==='me'?'on':''}"><i style="background:#2F7DE1"></i>我附近</button><button data-f="all" class="${filter==='all'?'on':''}">全部</button><button data-f="route" class="${filter==='route'?'on':''}"><i style="background:var(--show)"></i>港邊打卡路線</button><button data-f="near" class="${filter==='near'?'on':''}"><i style="background:var(--ink)"></i>飯店周邊</button><button data-f="fanzone" class="${filter==='fanzone'?'on':''}"><i style="background:${CATS.fan.c}"></i>應援地圖</button>`;
+ let f=`<button data-f="me" class="${filter==='me'?'on':''}"><i style="background:#2F7DE1"></i>我附近</button><button data-f="all" class="${filter==='all'?'on':''}">全部</button>${DAYS.map(d=>`<button data-f="day:${d[0]}" class="${filter==='day:'+d[0]?'on':''}"><i style="background:${DAYCOL[d[0]]}"></i>${d[1]} 路線</button>`).join('')}<button data-f="route" class="${filter==='route'?'on':''}"><i style="background:var(--show)"></i>港邊打卡路線</button><button data-f="near" class="${filter==='near'?'on':''}"><i style="background:var(--ink)"></i>飯店周邊</button><button data-f="fanzone" class="${filter==='fanzone'?'on':''}"><i style="background:${CATS.fan.c}"></i>應援地圖</button>`;
  Object.entries(CATS).forEach(([k,c])=>{if(k==='base')return;f+=`<button data-f="${k}" class="${filter===k?'on':''}"><i style="background:${c.c}"></i>${c.n}</button>`;});
  document.getElementById('filters').innerHTML=f;
 }
 function ck(id,label){return `<label class="ckrow"><input type="checkbox" data-ck="${id}"${state.checked[id]?' checked':''}><span>${label}</span></label>`;}
 function ckRow(p){return `<div class="prow"><input type="checkbox" class="ckbox" data-ck="${p.id}"${state.checked[p.id]?' checked':''} aria-label="打卡 ${esc(p.n)}"><span style="flex:1;min-width:0" data-open="${p.id}"><div class="nm">${esc(p.n)}</div><div class="ds">${esc(p.sd||p.d)}</div><span class="w">${esc(p.w)}</span></span></div>`;}
 function renderRoute(){const el=document.getElementById('routecard');
+ if(filter.startsWith('day:')){const iso=filter.slice(4),d=DAYS.find(x=>x[0]===iso),st=dayStops(iso),col=DAYCOL[iso];
+  const pts=st.map(x=>x.p.lat+','+x.p.lng);let dir='';
+  if(pts.length>=2){const mid=pts.slice(1,-1);const step=Math.ceil(mid.length/9)||1;const wp=mid.filter((_,i)=>i%step===0).slice(0,9);
+   dir=`https://www.google.com/maps/dir/?api=1&origin=${pts[0]}&destination=${pts[pts.length-1]}${wp.length?'&waypoints='+encodeURIComponent(wp.join('|')):''}`;}
+  el.innerHTML=`<div class="card" style="margin-top:12px"><div class="lbl" style="margin-top:0">Day Route</div><div class="big" style="color:${col}">${d[1]} ${d[2]} 路線・${st.length} 站</div>
+  <div class="dpick" style="margin-top:10px">${DAYS.map(x=>`<button data-f="day:${x[0]}" class="${x[0]===iso?'on':''}">${x[1]}<br><small>${x[2]}</small></button>`).join('')}</div>
+  <ul class="vt">${st.map((x,i)=>`<li><span class="vtm">${String(i+1).padStart(2,'0')}<br>${esc(x.it.t||'')}</span><span class="vd" style="border-color:${col};background:${col}"></span><span><div class="vh">${esc(x.it.x)}</div><div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><a class="chip" href="${esc(x.p.url||gmap(x.p.q))}" target="_blank" rel="noopener">Google 地圖 ↗</a><button class="chip" data-open="${x.p.id}">詳情</button></div></span></li>`).join('')}</ul>
+  ${dir?`<div class="btns"><a class="btn primary" href="${esc(dir)}" target="_blank" rel="noopener">在 Google 地圖看整天路線 ↗</a></div>`:''}
+  <div class="note"><b>TIPS</b>線是照行程順序把地點連起來，不是實際道路。改行程後路線會跟著變；整天路線最多帶 11 個點進 Google 地圖。</div></div>`;return;}
  if(filter==='me'&&me){const ns=P.filter(p=>p.lat!=null&&p.c!=='base').map(p=>[p,distKm(p,me)]).filter(a=>a[1]<=2).sort((a,b)=>a[1]-b[1]).slice(0,40);
   el.innerHTML=`<div class="grp"><i style="background:#2F7DE1"></i>你附近 2 km 內・由近到遠<span>${ns.length}</span></div>${ns.length?`<div class="card plist">${ns.map(([p,d])=>`<div class="prow" data-open="${p.id}">${icon(p.c)}<span style="min-width:0;flex:1"><div class="nm">${esc(p.n)}</div><div class="ds">${esc((p.sd||p.d).split('\n')[0])}</div><span class="w">直線約 ${d<1?Math.round(d*1000/50)*50+' m':d.toFixed(1)+' km'}・走路約 ${Math.max(1,Math.round(d*1.3/4.5*60))} 分</span></span></div>`).join('')}</div>`:'<div class="note">2 km 內沒有收錄的地點，按「全」看整張地圖。</div>'}<div class="note"><b>TIPS</b>位置會跟著你移動更新。距離是直線估算，部分位置為示意，導航請點地點裡的「從我這裡導航」。</div>`;return;}
  if(filter==='near'){const h=PM.hotel;const dist=p=>Math.hypot((p.lat-h.lat)*111,(p.lng-h.lng)*111*0.9229);
@@ -561,6 +632,8 @@ const nearHotel=p=>{if(p.lat==null)return false;const h=PM.hotel;const dy=(p.lat
 const nearVB=()=>fitVB(P.filter(nearHotel),1.45);
 const fanVB=()=>fitVB(P.filter(p=>p.c==='fan'||p.c==='cheer'),1.15);
 const routeVB=()=>fitVB(ROUTE.map(r=>PM[r.p]),1.25);
+function dayStops(iso){const out=[];dayItems(iso).forEach(it=>{const p=PM[it.p];if(!p||p.lat==null)return;if(out.length&&out[out.length-1].p===p)return;out.push({p,it});});return out;}
+const dayVB=iso=>{const st=dayStops(iso);return st.length?fitVB(st.map(x=>x.p),1.3):{x:0,y:0,w:W,h:H};};
 let me=null, watchId=null;
 const distKm=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*0.9229);
 function meVB(){const w=W/5,h=w*H/W;return {x:X(me.lng)-w/2,y:Y(me.lat)-h/2,w,h};}
@@ -589,13 +662,17 @@ function renderMap(){
  s+=`<polyline points="${pts(LRT)}" fill="none" stroke="#5DAA68" stroke-width="${2.5/z*Math.min(z,2)}" opacity=".55" stroke-dasharray="${4/z} ${3/z}"/>`;
  const lab=(t,la,lo,c)=>`<text x="${X(lo)}" y="${Y(la)}" font-size="${fs*1.05}" fill="${c||'#8EA6B5'}" font-weight="700" text-anchor="middle" letter-spacing="${fs*0.15}" style="pointer-events:none">${t}</text>`;
  s+=lab('台灣海峽',22.665,120.258)+lab('高雄港',22.598,120.290)+lab('旗津',22.598,120.272,'#A6A08F')+lab('壽山',22.646,120.272,'#97AC88')+lab('愛河',22.648,120.2905)+lab('捷運紅線',22.645,120.3065,'#E4572E')+lab('捷運橘線',22.6345,120.320,'#E0942F');
- const added=new Set(state.added.map(a=>a.p));
+ const added=new Set(Object.keys(planPlaces()));
+ const DAY=filter.startsWith('day:')?filter.slice(4):null; const dstops=DAY?dayStops(DAY):[];
  const RIDS=new Set(ROUTE.map(r=>r.p));
- const list=P.filter(p=>filter==='me'?true:filter==='near'?(nearHotel(p)||p.c==='base'):filter==='fanzone'?(p.c==='fan'||p.c==='cheer'||p.c==='base'):filter==='route'?(RIDS.has(p.id)||EATS.includes(p.id)):(filter==='all'||p.c===filter||p.c==='base'));
+ const DIDS=new Set(dstops.map(x=>x.p.id));
+ const list=P.filter(p=>DAY?DIDS.has(p.id):filter==='me'?true:filter==='near'?(nearHotel(p)||p.c==='base'):filter==='fanzone'?(p.c==='fan'||p.c==='cheer'||p.c==='base'):filter==='route'?(RIDS.has(p.id)||EATS.includes(p.id)):(filter==='all'||p.c===filter||p.c==='base'));
  if(filter==='route'){
   for(let i=0;i<ROUTE.length-1;i++){const a=PM[ROUTE[i].p],b=PM[ROUTE[i+1].p];if(a===b)continue;const m=ROUTE[i].nx||'walk';const col=m==='walk'?'#C8364A':'#2D6FA8';
    s+=`<line x1="${X(a.lng)}" y1="${Y(a.lat)}" x2="${X(b.lng)}" y2="${Y(b.lat)}" stroke="${col}" stroke-width="${2.6/z*Math.min(z,2.5)}" stroke-linecap="round" ${m==='walk'?'':`stroke-dasharray="${5/z} ${4/z}"`} opacity=".85"/>`;}
  }
+ if(DAY){const col=DAYCOL[DAY];for(let i=0;i<dstops.length-1;i++){const a=dstops[i].p,b=dstops[i+1].p;
+   s+=`<line x1="${X(a.lng)}" y1="${Y(a.lat)}" x2="${X(b.lng)}" y2="${Y(b.lat)}" stroke="${col}" stroke-width="${3/z*Math.min(z,2.5)}" stroke-linecap="round" opacity=".85"/>`;}}
  list.splice(0,list.length,...list.filter(p=>p.lat!=null));
  list.sort((a,b)=>(a.c==='base')-(b.c==='base'));
  list.forEach(p=>{const c=CATS[p.c], x=X(p.lng), y=Y(p.lat), rr=p.c==='base'?r*1.35:r;
@@ -605,10 +682,10 @@ function renderMap(){
   if(state.checked[p.id]) s+=`<circle cx="${x}" cy="${y}" r="${rr*1.9}" fill="#fff" stroke="#2E8577" stroke-width="${sw*1.6}"/>`;
   if(added.has(p.id)) s+=`<circle cx="${x}" cy="${y}" r="${rr*1.55}" fill="none" stroke="${c.c}" stroke-width="${sw*1.4}"/>`;
   s+=`<circle cx="${x}" cy="${y}" r="${rr}" fill="${c.c}" stroke="#fff" stroke-width="${sw*1.3}"/>`;
-  const rn=filter==='route'?ROUTE.map((r,i)=>r.p===p.id?i+1:0).filter(Boolean):[];
+  const rn=DAY?dstops.map((x,i)=>x.p.id===p.id?i+1:0).filter(Boolean):filter==='route'?ROUTE.map((r,i)=>r.p===p.id?i+1:0).filter(Boolean):[];
   if(rn.length){s+=`<text x="${x}" y="${y+rr*0.4}" font-size="${rr*1.15}" font-weight="900" text-anchor="middle" fill="#fff" style="pointer-events:none">${rn.join('·')}</text>`;}
   else if(p.c==='base') s+=`<text x="${x}" y="${y+rr*0.38}" font-size="${rr*1.1}" text-anchor="middle" fill="#fff" style="pointer-events:none">★</text>`;
-  if(p.c==='base'||z>=1.7||(filter==='route'&&(RIDS.has(p.id)&&z>=1.2))){const nm=p.n.replace(/（.*?）/g,'').replace(/「.*?」/,'');
+  if(p.c==='base'||z>=1.7||DAY||(filter==='route'&&(RIDS.has(p.id)&&z>=1.2))){const nm=p.n.replace(/（.*?）/g,'').replace(/「.*?」/,'');
    s+=`<text x="${x+rr*1.4}" y="${y+fs*0.35}" font-size="${p.c==='base'?fs*1.1:fs}" font-weight="${p.c==='base'?900:700}" fill="${p.c==='base'?'#1D1924':c.c}" paint-order="stroke" stroke="#F2F0EC" stroke-width="${3/z}" style="pointer-events:none">${esc(nm)}</text>`;}
   s+='</g>';
  });
@@ -640,10 +717,32 @@ function closeSheet(){sheet.classList.remove('show');scrim.classList.remove('sho
 scrim.onclick=closeSheet;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
 const catTag=(color,label)=>`<span class="cat"><i style="background:${color}"></i>${label}</span>`;
-let pickDay=null;
+let pickDay=null, editCtx=null;
+function placeOptions(sel){let h=`<option value="">（不連地點）</option>`;Object.entries(CATS).forEach(([k,c])=>{const ps=P.filter(p=>p.c===k);if(!ps.length)return;h+=`<optgroup label="${esc(c.n)}">${ps.map(p=>`<option value="${p.id}"${p.id===sel?' selected':''}>${esc(p.n)}</option>`).join('')}</optgroup>`;});return h;}
+function openEdit(iso,id){const it=id?(state.plan[iso]||[]).find(x=>x.id===id):{t:'',x:'',p:'',q:'',k:''};if(!it)return;editCtx={iso,id};
+ showSheet(`<span class="cat"><i style="background:${DAYCOL[iso]}"></i>${id?'編輯行程':'新增行程'}</span><h3>${id?esc(it.x):'新的行程'}</h3>
+ <div class="lbl"><label for="e_day">日期</label></div><div class="dpick" id="e_day">${DAYS.map(d=>`<button data-eday="${d[0]}" class="${d[0]===iso?'on':''}">${d[1]}<br><small>${d[2]}</small></button>`).join('')}</div>
+ <div class="lbl"><label for="e_t">時間（可以打「散場後」這類文字）</label></div><input class="inp" id="e_t" value="${esc(it.t||'')}" placeholder="例如 14:30">
+ <div class="lbl"><label for="e_x">內容</label></div><textarea class="inp" id="e_x" rows="2">${esc(it.x||'')}</textarea>
+ <div class="lbl"><label for="e_p">地點（連到地圖和路線）</label></div><select class="inp" id="e_p">${placeOptions(it.p)}</select>
+ <div class="lbl"><label for="e_q">或自訂 Google 地圖搜尋字（清單裡沒有的地點）</label></div><input class="inp" id="e_q" value="${esc(it.q||'')}" placeholder="例如 高雄 某某咖啡">
+ <div class="btns"><button class="btn primary" data-esave="1">儲存</button>${id?'<button class="btn" data-edel="1" style="color:var(--show)">刪除</button>':''}</div>
+ ${id?'<div class="btns"><button class="btn" data-emove="-1">↑ 上移</button><button class="btn" data-emove="1">↓ 下移</button></div>':''}
+ <div class="btns"><button class="btn" id="closeS">取消</button></div>
+ ${id?'':'<div class="note"><b>RESET</b>想回到建議版行程？<button class="chip" data-reset="1" style="margin-left:6px">恢復建議行程</button></div>'}`);
+}
+function saveEdit(){const e=editCtx;if(!e)return;const g=id=>document.getElementById(id);
+ const nd=(sheet.querySelector('[data-eday].on')||{}).dataset?.eday||e.iso;
+ const t=g('e_t').value.trim(), p=g('e_p').value, q=g('e_q').value.trim(); let x=g('e_x').value.trim();
+ if(!x&&p&&PM[p])x=PM[p].n; if(!x&&q)x=q; if(!x){toast('請填內容');return;}
+ let it;if(e.id){const a=state.plan[e.iso];const i=a.findIndex(z=>z.id===e.id);it=a[i];a.splice(i,1);}else it={id:newId(),k:''};
+ Object.assign(it,{t,x,p,q});
+ const arr=state.plan[nd];
+ if(e.id&&nd===e.iso&&tkey(t)==='99:99'){arr.push(it);} else insertByTime(arr,it);
+ save();renderAll();closeSheet();toast('已儲存');}
 function openPlace(id){const p=PM[id];if(!p)return;const c=CATS[p.c];
  pickDay=DAYS.some(d=>d[0]===today)?today:'2026-11-20';
- const ins=state.added.filter(a=>a.p===id).map(a=>{const d=DAYS.find(x=>x[0]===a.day);return (d?d[1]:'')+(a.time?' '+a.time:'');});
+ const ins=(planPlaces()[id]||[]).map(([dd,it])=>{const d=DAYS.find(x=>x[0]===dd);return (d?d[1]:'')+(it.t?' '+it.t:'');});
  showSheet(`${catTag(c.c,c.n)}<h3>${esc(p.n)}</h3><div class="sub">${esc(p.d)}</div>
  <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="chip static">${esc(p.w)}</span>${ins.length?`<span class="chip static ink">已在行程：${esc(ins.join('、'))}</span>`:''}</div>
  ${p.links&&p.links.length?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${p.links.map(l=>`<a class="chip" href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)} ↗</a>`).join('')}</div>`:''}
@@ -702,13 +801,19 @@ document.addEventListener('click',async e=>{
  if(t.closest('[data-bus]')){openBus();return;}
  if(t.closest('[data-hsr]')){openHsr();return;}
  if(t.id==='closeS'){closeSheet();return;}
+ const edy=t.closest('[data-eday]'); if(edy){sheet.querySelectorAll('[data-eday]').forEach(b=>b.classList.toggle('on',b===edy));return;}
  const dy=t.closest('[data-day]'); if(dy){pickDay=dy.dataset.day;sheet.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('on',b===dy));return;}
  const ad=t.closest('[data-add]'); if(ad){const tm=(document.getElementById('ptime')||{}).value||'';
-  state.added.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),p:ad.dataset.add,day:pickDay,time:tm});
+  insertByTime(state.plan[pickDay],{id:newId(),t:tm,x:PM[ad.dataset.add].n,p:ad.dataset.add,k:''});
   save();renderAll();closeSheet();const d=DAYS.find(x=>x[0]===pickDay);toast('已加入 '+d[1]+(tm?' '+tm:''));return;}
- const dl=t.closest('[data-del]'); if(dl){state.added=state.added.filter(a=>a.id!==dl.dataset.del);save();renderAll();toast('已刪除');return;}
+ const ed=t.closest('[data-edit]'); if(ed){const [iso,id]=ed.dataset.edit.split('|');openEdit(iso,id);return;}
+ const ni=t.closest('[data-newitem]'); if(ni){openEdit(ni.dataset.newitem,null);return;}
+ const sv=t.closest('[data-esave]'); if(sv){saveEdit();return;}
+ const dv=t.closest('[data-edel]'); if(dv){const e=editCtx;state.plan[e.iso]=state.plan[e.iso].filter(x=>x.id!==e.id);save();renderAll();closeSheet();toast('已刪除');return;}
+ const mv=t.closest('[data-emove]'); if(mv){const e=editCtx,a=state.plan[e.iso],i=a.findIndex(x=>x.id===e.id),j=i+(+mv.dataset.emove);if(i<0||j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];save();renderAll();toast(+mv.dataset.emove<0?'已上移':'已下移');return;}
+ const rs=t.closest('[data-reset]'); if(rs){state.plan=JSON.parse(JSON.stringify(DEFAULT_PLAN));Object.values(state.plan).forEach(a=>a.forEach(it=>it.id=newId()));save();renderAll();closeSheet();toast('已恢復建議行程');return;}
  const f=t.closest('[data-f]'); if(f&&f.dataset.f==='me'){locate();if(f.dataset.gomap)document.getElementById('map').scrollIntoView({behavior:'smooth'});return;}
- if(f){filter=f.dataset.f;vb=filter==='route'?routeVB():filter==='fanzone'?fanVB():filter==='near'?nearVB():{x:0,y:0,w:W,h:H};renderList();renderMap();renderRoute();if(f.dataset.gomap)document.getElementById('map').scrollIntoView({behavior:'smooth'});return;}
+ if(f){filter=f.dataset.f;vb=filter.startsWith('day:')?dayVB(filter.slice(4)):filter==='route'?routeVB():filter==='fanzone'?fanVB():filter==='near'?nearVB():{x:0,y:0,w:W,h:H};renderList();renderMap();renderRoute();if(f.dataset.gomap)document.getElementById('map').scrollIntoView({behavior:'smooth'});return;}
  const op=t.closest('[data-open]'); if(op&&!svg.contains(op)){openPlace(op.dataset.open);return;}
 });
 // tab highlight
